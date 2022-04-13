@@ -1,17 +1,18 @@
-package com.cleverpy.moviesAPI.security.payload;
+package com.cleverpy.moviesAPI.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Dto used for the login requests
+ * DTO with the required data for the creation of a new user
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+@AllArgsConstructor
+public class NewUserDto {
 
+    private String email;
     private String username;
     private String password;
 
