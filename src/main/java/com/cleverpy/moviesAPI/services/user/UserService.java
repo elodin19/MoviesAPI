@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 public interface UserService {
 
     ResponseEntity<?> createUser(NewUserDto newUser);
-    ResponseEntity<?> getUser(Long id);
+    ResponseEntity<?> getUser(Long id, String username);
     ResponseEntity<?> getAllUsers();
     ResponseEntity<?> updateUser(Long id, UpdateUserDto userDto, String username);
     ResponseEntity<?> deleteUser(Long id, String username);

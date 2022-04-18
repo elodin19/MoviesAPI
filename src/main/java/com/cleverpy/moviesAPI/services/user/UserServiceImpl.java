@@ -95,9 +95,26 @@ public class UserServiceImpl implements UserService {
      * @return ResponseEntity (ok: UserResponseDto, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> getUser(Long id) {
+    public ResponseEntity<?> getUser(Long id, String username) {
 
         Optional<User> userOpt = userRepository.findById(id);
+        Optional<User> userConnecting = userRepository.findByUsername(username);
+
+        //Tests if the user is the owner of the credentials or if it's admin
+        if (!userConnecting.get().getUsername().equalsIgnoreCase(username)){
+
+            boolean isAdmin = false;
+
+            for (Role role  : userOpt.get().getRoles()){
+                if (role.getName().equalsIgnoreCase("ADMIN")) isAdmin = true;
+            }
+
+            if (!isAdmin)
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("The user " + username + " is not allowed to update the user "
+                                + id));
+        }
+
         return ResponseEntity.ok(userOpt.get().getDto(" "));
     }
 
@@ -126,7 +143,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> updateUser(Long id, UpdateUserDto userDto, String username) {
 
-        //Gets User
+        //Get Users
         Optional<User> userOpt = userRepository.findById(id);
         Optional<User> userConnecting = userRepository.findByUsername(username);
 

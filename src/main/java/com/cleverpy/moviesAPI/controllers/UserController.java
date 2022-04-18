@@ -54,14 +54,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{id}")
     @ApiOperation("Gets user data. Authentication required (USER)")
-    public ResponseEntity<?> getUser(@PathVariable Long id){
+    public ResponseEntity<?> getUser(@PathVariable Long id, @CurrentSecurityContext(expression="authentication?.name") String username){
 
         //Validates the id
         if (!userRepository.existsById(id))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The user id " + id + " doesn't exist!"));
 
-        return userService.getUser(id);
+        return userService.getUser(id, username);
     }
 
     /**
