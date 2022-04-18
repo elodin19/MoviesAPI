@@ -1,5 +1,6 @@
 package com.cleverpy.moviesAPI.entities;
 
+import com.cleverpy.moviesAPI.dto.genre.GenreDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,8 @@ public class Genre {
 
     @ManyToMany(mappedBy = "genres")
     private List<Movie> movies = new ArrayList<>();
+
+    public GenreDto getDto(){
+        return new GenreDto(name);
+    }
 }

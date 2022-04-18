@@ -75,7 +75,7 @@ public class Movie {
 
     @Column(name = "vote_count", nullable = false)
     private Long voteCount;
-    
+
     @ManyToMany
     @JoinTable(name = "MOVIES_PRODUCTION_COMPANIES",
             joinColumns = {
