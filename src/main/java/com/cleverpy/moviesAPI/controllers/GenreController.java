@@ -27,25 +27,26 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to create a new genre
+     * Endpoint to create a new Genre
+     * Name is mandatory and must be unique
      * @param genreDto
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
-    @ApiOperation("Creates new genre. Authentication required (ADMIN)")
+    @ApiOperation("Creates new Genre. Authentication required (ADMIN). \nName is mandatory and must be unique")
     public ResponseEntity<?> createGenre(@Valid @RequestBody GenreDto genreDto){
         return genreService.create(genreDto);
     }
 
     /**
-     * Endpoint to get a genre by id
+     * Endpoint to get a Genre by id
      * @param genre_id
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{genre_id}")
-    @ApiOperation("Gets a genre by id. Authentication required (USER)")
+    @ApiOperation("Gets a Genre by id. Authentication required (USER)")
     public ResponseEntity<?> getById(@PathVariable Long genre_id){
 
         //Validates the id
@@ -56,24 +57,24 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to get all genres
+     * Endpoint to get all Genres
      * @return ResponseEntity (ok: List<genreDto>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/")
-    @ApiOperation("Gets all genres. Authentication required (USER)")
+    @ApiOperation("Gets all Genres. Authentication required (USER)")
     public ResponseEntity<?> getAll(){
         return genreService.getAll();
     }
 
     /**
-     * Endpoint to get movies by genre
+     * Endpoint to get movies by Genre
      * @param genre_id
      * @return ResponseEntity (ok: List<movies>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/movies/{genre_id}")
-    @ApiOperation("Gets movies by genre. Authentication required (USER)")
+    @ApiOperation("Gets movies by Genre. Authentication required (USER)")
     public ResponseEntity<?> getMovies(@PathVariable Long genre_id){
 
         //Validates id
@@ -84,13 +85,14 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to update the genre name
+     * Endpoint to update the Genre
+     * Name is mandatory and must be unique
      * @param genre_id
      * @return ResponseEntity (ok: GenreDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{genre_id}")
-    @ApiOperation("Updates the genre name. Authentication required (ADMIN)")
+    @ApiOperation("Updates the Genre. Authentication required (ADMIN). \nName is mandatory and must be unique")
     public ResponseEntity<?> update(@PathVariable Long genre_id, @Valid @RequestBody GenreDto genreDto){
 
         //Validates id
@@ -101,13 +103,13 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to delete the genre
+     * Endpoint to delete the Genre
      * @param genre_id
      * @return ResponseEntity (messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{genre_id}")
-    @ApiOperation("Deletes the genre. Authentication required (ADMIN)")
+    @ApiOperation("Deletes the Genre. Authentication required (ADMIN)")
     public ResponseEntity<?> delete(@PathVariable Long genre_id){
 
         //Validates id

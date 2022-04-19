@@ -39,10 +39,15 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
     @Override
     public ResponseEntity<?> create(ProductionCompanyDto companyDto) {
 
-        //Tests if the company already exists
+        //Tests if the company name already exists
         if (companyRepository.existsByName(companyDto.getName()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The production company " + companyDto.getName() + " is already registered"));
+
+        //Tests if the logo path already exists
+        if (companyRepository.existsByLogoPath(companyDto.getLogoPath()))
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("The logo path " + companyDto.getLogoPath() + " is already registered"));
 
         //Creates and saves the new company
         ProductionCompany company = new ProductionCompany(null, companyDto.getName(), companyDto.getLogoPath(),
@@ -85,7 +90,7 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
     }
 
     /**
-     * Method to get all the movies from a specific ProductionCompany
+     * Method to get all the movies from a specific Production Company
      * @param id
      * @return ResponseEntity (ok: List<Movie>, no content)
      */

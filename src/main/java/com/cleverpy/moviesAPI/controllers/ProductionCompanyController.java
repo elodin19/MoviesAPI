@@ -29,12 +29,15 @@ public class ProductionCompanyController {
 
     /**
      * Endpoint to create a new Production Company
+     * Name, logoPath and OriginCountry are mandatory
+     * Name and logoPath must be unique
      * @param companyDto
      * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
-    @ApiOperation("Creates new Production Company. Authentication required (ADMIN)")
+    @ApiOperation("Creates new Production Company. Authentication required (ADMIN). \nName, logoPath and OriginCountry are mandatory. " +
+            "Name and logoPath must be unique")
     public ResponseEntity<?> createCompany(@Valid @RequestBody ProductionCompanyDto companyDto){
 
         if (companyDto.getOriginCountry().length() != 2)
@@ -78,7 +81,7 @@ public class ProductionCompanyController {
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/movies/{company_id}")
-    @ApiOperation("Gets movies by genre. Authentication required (USER)")
+    @ApiOperation("Gets movies by Production Company. Authentication required (USER)")
     public ResponseEntity<?> getMovies(@PathVariable Long company_id){
 
         //Validates id
@@ -90,12 +93,15 @@ public class ProductionCompanyController {
 
     /**
      * Endpoint to update the Production Company
+     * Name, logoPath and OriginCountry are mandatory
+     * Name and logoPath must be unique
      * @param company_id
      * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{company_id}")
-    @ApiOperation("Updates the genre name. Authentication required (ADMIN)")
+    @ApiOperation("Updates the Production Company. Authentication required (ADMIN).\nName, logoPath and OriginCountry are mandatory. " +
+            "Name and logoPath must be unique")
     public ResponseEntity<?> update(@PathVariable Long company_id, @Valid @RequestBody ProductionCompanyDto companyDto){
 
         //Validates id
