@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
  */
 public interface GenreService {
 
-    ResponseEntity<?> createGenre(GenreDto genreDto);
-    ResponseEntity<?> getGenre(Long id);
-    ResponseEntity<?> getAllGenres();
-    ResponseEntity<?> getMoviesFromGenre(Long id);
-    ResponseEntity<?> updateGenre(Long id, GenreDto genreDto);
-    ResponseEntity<?> deleteGenre(Long id);
+    ResponseEntity<?> create(GenreDto genreDto);
+    ResponseEntity<?> getById(Long id);
+    ResponseEntity<?> getAll();
+    ResponseEntity<?> getMovies(Long id);
+    ResponseEntity<?> update(Long id, GenreDto genreDto);
+    ResponseEntity<?> delete(Long id);
+
 }

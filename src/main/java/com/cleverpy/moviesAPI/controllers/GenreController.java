@@ -12,7 +12,10 @@ import com.cleverpy.moviesAPI.services.genre.GenreServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/genre")
@@ -33,14 +36,15 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiOperation("Creates new genre. Authentication required (ADMIN)")
-    public ResponseEntity<?> createGenre(@RequestBody GenreDto genreDto){
+    public ResponseEntity<?> createGenre(@Valid @RequestBody GenreDto genreDto){
 
         //Validates Dto
         if (genreDto.getName() == null)
             return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
 
-        return genreService.createGenre(genreDto);
+        return genreService.create(genreDto);
     }
 
     /**
@@ -57,7 +61,7 @@ public class GenreController {
         if (!genreRepository.existsById(genre_id))
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
 
-        return genreService.getGenre(genre_id);
+        return genreService.getById(genre_id);
     }
 
     /**
@@ -69,7 +73,7 @@ public class GenreController {
     @ApiOperation("Gets all genres. Authentication required (USER)")
     public ResponseEntity<?> getAllGenres(){
 
-        return genreService.getAllGenres();
+        return genreService.getAll();
     }
 
     /**
@@ -86,7 +90,7 @@ public class GenreController {
         if (!genreRepository.existsById(genre_id))
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
 
-        return genreService.getMoviesFromGenre(genre_id);
+        return genreService.getMovies(genre_id);
     }
 
     /**
@@ -96,18 +100,15 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{genre_id}")
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiOperation("Updates the genre name. Authentication required (ADMIN)")
-    public ResponseEntity<?> updateGenre(@PathVariable Long genre_id, @RequestBody GenreDto genreDto){
+    public ResponseEntity<?> updateGenre(@PathVariable Long genre_id, @Valid @RequestBody GenreDto genreDto){
 
         //Validates id
         if (!genreRepository.existsById(genre_id))
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
 
-        //Validates Dto
-        if (genreDto.getName() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
-
-        return genreService.updateGenre(genre_id, genreDto);
+        return genreService.update(genre_id, genreDto);
     }
 
     /**
@@ -124,5 +125,5 @@ public class GenreController {
         if (!genreRepository.existsById(genre_id))
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
 
-        return genreService.deleteGenre(genre_id);
+        return genreService.delete(genre_id);
     }}

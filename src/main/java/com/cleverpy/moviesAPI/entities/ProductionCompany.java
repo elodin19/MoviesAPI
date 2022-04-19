@@ -1,5 +1,6 @@
 package com.cleverpy.moviesAPI.entities;
 
+import com.cleverpy.moviesAPI.dto.productionCompany.ProductionCompanyDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,8 @@ public class ProductionCompany {
 
     @ManyToMany(mappedBy = "productionCompanies")
     private List<Movie> movies = new ArrayList<>();
+
+    public ProductionCompanyDto getDto(){
+        return new ProductionCompanyDto(name, logoPath, originCountry);
+    }
 }

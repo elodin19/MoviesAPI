@@ -37,12 +37,10 @@ public class GenreServiceImpl implements GenreService {
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> createGenre(GenreDto genreDto) {
+    public ResponseEntity<?> create(GenreDto genreDto) {
 
         //Tests if the genre already exists
-        Optional<Genre> genreOpt = genreRepository.findByName(genreDto.getName());
-
-        if (genreOpt.isPresent())
+        if (genreRepository.existsByName(genreDto.getName()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The genre " + genreDto.getName() + " is already registered"));
 
@@ -59,7 +57,7 @@ public class GenreServiceImpl implements GenreService {
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> getGenre(Long id) {
+    public ResponseEntity<?> getById(Long id) {
 
         //Gets the genre
         Optional<Genre> genreOpt = genreRepository.findById(id);
@@ -69,10 +67,10 @@ public class GenreServiceImpl implements GenreService {
 
     /**
      * Method to get all genres
-     * @return ResponseEntity (List<genreDto>)
+     * @return ResponseEntity (ok: List<genreDto>, no content)
      */
     @Override
-    public ResponseEntity<?> getAllGenres() {
+    public ResponseEntity<?> getAll() {
 
         List<Genre> genres = genreRepository.findAll();
 
@@ -88,10 +86,10 @@ public class GenreServiceImpl implements GenreService {
     /**
      * Method to get all the movies from a specific genre
      * @param id
-     * @return ResponseEntity (ok: List<Movie>, bad request: messageResponse)
+     * @return ResponseEntity (ok: List<Movie>, no content)
      */
     @Override
-    public ResponseEntity<?> getMoviesFromGenre(Long id) {
+    public ResponseEntity<?> getMovies(Long id) {
 
         //Gets the genre
         Optional<Genre> genreOpt = genreRepository.findById(id);
@@ -109,12 +107,10 @@ public class GenreServiceImpl implements GenreService {
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> updateGenre(Long id, GenreDto genreDto) {
+    public ResponseEntity<?> update(Long id, GenreDto genreDto) {
 
         //Tests if the new name already exists
-        Optional<Genre> newNameOpt = genreRepository.findByName(genreDto.getName());
-
-        if (newNameOpt.isPresent())
+        if (genreRepository.existsByName(genreDto.getName()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The genre " + genreDto.getName() + " is already registered"));
 
@@ -135,7 +131,7 @@ public class GenreServiceImpl implements GenreService {
      * @return ResponseEntity(MessageResponse)
      */
     @Override
-    public ResponseEntity<?> deleteGenre(Long id) {
+    public ResponseEntity<?> delete(Long id) {
 
         //Gets the genre to be removed
         Optional<Genre> genreOpt = genreRepository.findById(id);
