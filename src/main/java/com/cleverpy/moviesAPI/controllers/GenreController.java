@@ -1,10 +1,5 @@
 package com.cleverpy.moviesAPI.controllers;
 
-/**
- * Controller to manage the CRUD operations of the Genres
- * Requires authentication
- */
-
 import com.cleverpy.moviesAPI.dto.genre.GenreDto;
 import com.cleverpy.moviesAPI.repositories.GenreRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
@@ -12,11 +7,13 @@ import com.cleverpy.moviesAPI.services.genre.GenreServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
+/**
+ * Controller to manage the CRUD operations of the Genres
+ * Requires authentication
+ */
 @RestController
 @RequestMapping("/api/genre")
 public class GenreController {
@@ -36,14 +33,8 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
-    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiOperation("Creates new genre. Authentication required (ADMIN)")
     public ResponseEntity<?> createGenre(@Valid @RequestBody GenreDto genreDto){
-
-        //Validates Dto
-        if (genreDto.getName() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
-
         return genreService.create(genreDto);
     }
 
@@ -55,7 +46,7 @@ public class GenreController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{genre_id}")
     @ApiOperation("Gets a genre by id. Authentication required (USER)")
-    public ResponseEntity<?> getGenre(@PathVariable Long genre_id){
+    public ResponseEntity<?> getById(@PathVariable Long genre_id){
 
         //Validates the id
         if (!genreRepository.existsById(genre_id))
@@ -71,8 +62,7 @@ public class GenreController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/")
     @ApiOperation("Gets all genres. Authentication required (USER)")
-    public ResponseEntity<?> getAllGenres(){
-
+    public ResponseEntity<?> getAll(){
         return genreService.getAll();
     }
 
@@ -84,7 +74,7 @@ public class GenreController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/movies/{genre_id}")
     @ApiOperation("Gets movies by genre. Authentication required (USER)")
-    public ResponseEntity<?> getMoviesFromGenre(@PathVariable Long genre_id){
+    public ResponseEntity<?> getMovies(@PathVariable Long genre_id){
 
         //Validates id
         if (!genreRepository.existsById(genre_id))
@@ -100,9 +90,8 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{genre_id}")
-    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiOperation("Updates the genre name. Authentication required (ADMIN)")
-    public ResponseEntity<?> updateGenre(@PathVariable Long genre_id, @Valid @RequestBody GenreDto genreDto){
+    public ResponseEntity<?> update(@PathVariable Long genre_id, @Valid @RequestBody GenreDto genreDto){
 
         //Validates id
         if (!genreRepository.existsById(genre_id))
@@ -112,14 +101,14 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to delete the genre name
+     * Endpoint to delete the genre
      * @param genre_id
      * @return ResponseEntity (messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{genre_id}")
-    @ApiOperation("Deletes the genre name. Authentication required (ADMIN)")
-    public ResponseEntity<?> deleteGenre(@PathVariable Long genre_id){
+    @ApiOperation("Deletes the genre. Authentication required (ADMIN)")
+    public ResponseEntity<?> delete(@PathVariable Long genre_id){
 
         //Validates id
         if (!genreRepository.existsById(genre_id))

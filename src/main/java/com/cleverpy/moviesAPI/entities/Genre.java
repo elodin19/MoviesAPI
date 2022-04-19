@@ -30,6 +30,6 @@ public class Genre {
     private List<Movie> movies = new ArrayList<>();
 
     public GenreDto getDto(){
-        return new GenreDto(name);
+        return new GenreDto(id, name);
     }
 }

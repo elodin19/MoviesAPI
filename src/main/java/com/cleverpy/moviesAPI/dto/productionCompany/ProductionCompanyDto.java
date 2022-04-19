@@ -14,6 +14,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class ProductionCompanyDto {
 
+    public Long id;
+
     @NotBlank(message = "Name is mandatory")
     private String name;
 

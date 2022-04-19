@@ -36,6 +36,6 @@ public class ProductionCompany {
     private List<Movie> movies = new ArrayList<>();
 
     public ProductionCompanyDto getDto(){
-        return new ProductionCompanyDto(name, logoPath, originCountry);
+        return new ProductionCompanyDto(id, name, logoPath, originCountry);
     }
 }

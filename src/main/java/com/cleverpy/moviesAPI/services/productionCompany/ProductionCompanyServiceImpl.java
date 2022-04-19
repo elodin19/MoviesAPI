@@ -111,17 +111,17 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
     @Override
     public ResponseEntity<?> update(Long id, ProductionCompanyDto companyDto) {
 
+        //Gets the company
+        Optional<ProductionCompany> companyOpt = companyRepository.findById(id);
+
         //Tests if the name or the logo path already exists
-        if (companyRepository.existsByName(companyDto.getName()))
+        if (companyRepository.existsByName(companyDto.getName()) && !companyOpt.get().getName().equalsIgnoreCase(companyDto.getName()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The production company " + companyDto.getName() + " is already registered"));
 
-        if (companyRepository.existsByLogoPath(companyDto.getLogoPath()))
+        if (companyRepository.existsByLogoPath(companyDto.getLogoPath()) && !companyOpt.get().getLogoPath().equalsIgnoreCase(companyDto.getLogoPath()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The logo path " + companyDto.getLogoPath() + " is already registered"));
-
-        //Gets the company
-        Optional<ProductionCompany> companyOpt = companyRepository.findById(id);
 
         //Updates and saves the company
         companyOpt.get().setName(companyDto.getName());
