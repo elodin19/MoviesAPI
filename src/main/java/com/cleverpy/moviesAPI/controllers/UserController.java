@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  *  Controller to manage the User CRUD
  */
@@ -28,68 +30,60 @@ public class UserController {
 
     /**
      * Method to create a new user
+     * Email, username and password and mandatory
+     * Email and username must be unique
      * @param newUser
      * @return ResponseEntity (ok: NewUserResponse, bad request: messageResponse)
      */
     @PostMapping("/new-user")
     @ApiOperation("Creates new user")
-    public ResponseEntity<?> newUser(@RequestBody NewUserDto newUser){
-
-        //Validates the DTO
-        if (newUser.getUsername() != null &&
-                newUser.getEmail() != null &&
-                newUser.getPassword() != null)
-            return userService.createUser(newUser);
-
-        return ResponseEntity.badRequest()
-                .body(new MessageResponse("Missing parameters"));
-
+    public ResponseEntity<?> createUser(@Valid @RequestBody NewUserDto newUser){
+        return userService.createUser(newUser);
     }
+
+    //TODO: Refactor users - look for @Valid @NotBlank comments and pagenation
 
     /**
      * Gets the user data
      * @param id
-     * @return ResponseEntity (ok: user, bad request: messageResponse)
+     * @return ResponseEntity (ok: UserResponseDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{id}")
     @ApiOperation("Gets user data. Authentication required (USER)")
-    public ResponseEntity<?> getUser(@PathVariable Long id, @CurrentSecurityContext(expression="authentication?.name") String username){
+    public ResponseEntity<?> getById(@PathVariable Long id, @CurrentSecurityContext(expression="authentication?.name") String username){
 
         //Validates the id
         if (!userRepository.existsById(id))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The user id " + id + " doesn't exist!"));
 
-        return userService.getUser(id, username);
+        return userService.getById(id, username);
     }
 
     /**
      * Gets all users
-     * @return users
+     * @return ResponseEntity (ok: UsersPageDto, no content)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/all")
+    @GetMapping("/page/{page_number}")
     @ApiOperation("Gets all users data. Authentication required (ADMIN)")
-    public ResponseEntity<?> getAllUsers(){
-        return userService.getAllUsers();
+    public ResponseEntity<?> getAll(@PathVariable Integer page_number){
+        return userService.getAllUsers(page_number);
     }
 
     /**
-     * Updates user (only username, email and isValidated)
+     * Updates user
+     * Email and username are mandatory and must be unique
      * @param id
      * @param userDto
-     * @return ReponseEntity (with the User or an error message)
+     * @return ReponseEntity (ok: UserResponseDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/{id}")
     @ApiOperation("Updates user. Authentication required (USER)")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserDto userDto,
-                                        @CurrentSecurityContext(expression="authentication?.name") String username){
-
-        //Validates the DTO
-        if (userDto.getUsername() == null || userDto.getEmail() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateUserDto userDto,
+                                    @CurrentSecurityContext(expression="authentication?.name") String username){
 
         //Validates the id
         if (!userRepository.existsById(id))
@@ -102,12 +96,12 @@ public class UserController {
     /**
      * Removes user
      * @param id
-     * @return ResponseEntity
+     * @return ResponseEntity (messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping("/{id}")
     @ApiOperation("Deletes user. Authentication required (USER)")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id, @CurrentSecurityContext(expression="authentication?.name") String username){
+    public ResponseEntity<?> delete(@PathVariable Long id, @CurrentSecurityContext(expression="authentication?.name") String username){
         //Validates the id
         if (!userRepository.existsById(id))
             return ResponseEntity.badRequest()

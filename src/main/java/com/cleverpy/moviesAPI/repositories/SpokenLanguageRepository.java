@@ -1,10 +1,11 @@
 package com.cleverpy.moviesAPI.repositories;
 
 import com.cleverpy.moviesAPI.entities.SpokenLanguage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,5 +18,5 @@ public interface SpokenLanguageRepository extends JpaRepository<SpokenLanguage, 
     boolean existsByName(String name);
     boolean existsByIso(String iso);
     Optional<SpokenLanguage> findById(Long id);
-    List<SpokenLanguage> findAll();
+    Page<SpokenLanguage> findAll(Pageable page);
 }

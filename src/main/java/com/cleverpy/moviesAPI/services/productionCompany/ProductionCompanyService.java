@@ -10,7 +10,7 @@ public interface ProductionCompanyService {
 
     ResponseEntity<?> create(ProductionCompanyDto companyDto);
     ResponseEntity<?> getById(Long id);
-    ResponseEntity<?> getAll();
+    ResponseEntity<?> getAll(Integer pageNumber);
     ResponseEntity<?> getMovies(Long id);
     ResponseEntity<?> update(Long id, ProductionCompanyDto companyDto);
     ResponseEntity<?> delete(Long id);

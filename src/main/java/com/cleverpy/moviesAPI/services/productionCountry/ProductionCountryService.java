@@ -10,7 +10,7 @@ public interface ProductionCountryService {
 
     ResponseEntity<?> create(ProductionCountryDto countryDto);
     ResponseEntity<?> getById(Long id);
-    ResponseEntity<?> getAll();
+    ResponseEntity<?> getAll(Integer pageNumber);
     ResponseEntity<?> getMovies(Long id);
     ResponseEntity<?> update(Long id, ProductionCountryDto countryDto);
     ResponseEntity<?> delete(Long id);

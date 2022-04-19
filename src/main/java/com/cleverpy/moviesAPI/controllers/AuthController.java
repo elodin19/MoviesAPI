@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -47,12 +48,12 @@ public class AuthController {
 
     /**
      * Method to login
-     * @param loginRequest (username and password)
+     * @param loginRequest
      * @return ResponseEntity (ok: jwt token, bad request: messageResponse)
      */
     @PostMapping("/login")
     @ApiOperation("Login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest){
 
         try {
             Optional<User> userOpt = userRepository.findByUsername(loginRequest.getUsername());
@@ -77,17 +78,13 @@ public class AuthController {
     /**
      * Method to activate the user
      * * The user won't be able to log in before activating the account!
-     *
+     * Username and activation code are mandatory
      * @param activateUser
      * @return ResponseEntity
      */
     @PostMapping("/activate-user")
     @ApiOperation("Activates the new user")
-    public ResponseEntity<?> activateUser(@RequestBody ActivateUserDto activateUser){
-
-        //Validates the DTO
-        if (activateUser.getUsername() == null || activateUser.getActivationCode() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
+    public ResponseEntity<?> activateUser(@Valid @RequestBody ActivateUserDto activateUser){
 
         //Validates de user
         Optional<User> userOpt = userRepository.findByUsername(activateUser.getUsername());
@@ -101,16 +98,13 @@ public class AuthController {
 
     /**
      * Method to ask for a new password
+     * Email is mandatory
      * @param forgotPass
      * @return ResponseEntity (MessageReponse)
      */
     @PostMapping("/forgot-pass")
     @ApiOperation("Asks for a new password")
-    public ResponseEntity<?> forgotPass(@RequestBody ForgotPassDto forgotPass){
-
-        //Validates the DTO
-        if (forgotPass.getEmail() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
+    public ResponseEntity<?> forgotPass(@Valid @RequestBody ForgotPassDto forgotPass){
 
         //Validates the user
         Optional<User> userOpt = userRepository.findByEmail(forgotPass.getEmail());
@@ -124,12 +118,13 @@ public class AuthController {
 
     /**
      * Method that sets a new password to the user
+     * Username, newPass and validationCode are mandatory
      * @param newPass
-     * @return ResponseEntity (MessageReponse)
+     * @return ResponseEntity (MessageResponse)
      */
     @PostMapping("/save-pass")
     @ApiOperation("Save new password")
-    public ResponseEntity<?> setNewPass(@RequestBody NewPassDto newPass){
+    public ResponseEntity<?> setNewPass(@Valid @RequestBody NewPassDto newPass){
 
         //Validates the DTO
         if (newPass.getUsername() == null ||

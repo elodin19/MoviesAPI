@@ -1,12 +1,16 @@
 package com.cleverpy.moviesAPI.services.genre;
 
 import com.cleverpy.moviesAPI.dto.genre.GenreDto;
+import com.cleverpy.moviesAPI.dto.genre.GenresPageDto;
 import com.cleverpy.moviesAPI.entities.Genre;
 import com.cleverpy.moviesAPI.entities.Movie;
 import com.cleverpy.moviesAPI.repositories.GenreRepository;
 import com.cleverpy.moviesAPI.repositories.MovieRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -68,20 +72,23 @@ public class GenreServiceImpl implements GenreService {
 
     /**
      * Method to get all genres
-     * @return ResponseEntity (ok: List<genreDto>, no content)
+     * @return ResponseEntity (ok: GenresPageDto, no content)
      */
     @Override
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(Integer pageNumber) {
 
-        List<Genre> genres = genreRepository.findAll();
+        Pageable page = PageRequest.of(pageNumber, 10);
+        Page<Genre> genres = genreRepository.findAll(page);
 
-        if (genres.size() == 0)
+        if (genres.toList().size() == 0)
             return ResponseEntity.noContent().build();
 
         List<GenreDto> genresDto = new ArrayList<>();
         for (Genre genre : genres) genresDto.add(genre.getDto());
 
-        return ResponseEntity.ok(genresDto);
+        return ResponseEntity.ok(new GenresPageDto(
+                genres.getTotalPages(), genres.getTotalElements(), genresDto
+        ));
     }
 
     /**

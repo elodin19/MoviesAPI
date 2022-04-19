@@ -10,7 +10,7 @@ public interface GenreService {
 
     ResponseEntity<?> create(GenreDto genreDto);
     ResponseEntity<?> getById(Long id);
-    ResponseEntity<?> getAll();
+    ResponseEntity<?> getAll(Integer pageNumber);
     ResponseEntity<?> getMovies(Long id);
     ResponseEntity<?> update(Long id, GenreDto genreDto);
     ResponseEntity<?> delete(Long id);

@@ -34,7 +34,7 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
-    @ApiOperation("Creates new Genre. Authentication required (ADMIN). \nName is mandatory and must be unique")
+    @ApiOperation("Creates new Genre. Authentication required (ADMIN). Name is mandatory and must be unique")
     public ResponseEntity<?> createGenre(@Valid @RequestBody GenreDto genreDto){
         return genreService.create(genreDto);
     }
@@ -58,13 +58,13 @@ public class GenreController {
 
     /**
      * Endpoint to get all Genres
-     * @return ResponseEntity (ok: List<genreDto>, no content)
+     * @return ResponseEntity (ok: GenresPageDto, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/")
+    @GetMapping("/page/{page_number}")
     @ApiOperation("Gets all Genres. Authentication required (USER)")
-    public ResponseEntity<?> getAll(){
-        return genreService.getAll();
+    public ResponseEntity<?> getAll(@PathVariable Integer page_number){
+        return genreService.getAll(page_number);
     }
 
     /**
@@ -92,7 +92,7 @@ public class GenreController {
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{genre_id}")
-    @ApiOperation("Updates the Genre. Authentication required (ADMIN). \nName is mandatory and must be unique")
+    @ApiOperation("Updates the Genre. Authentication required (ADMIN). Name is mandatory and must be unique")
     public ResponseEntity<?> update(@PathVariable Long genre_id, @Valid @RequestBody GenreDto genreDto){
 
         //Validates id

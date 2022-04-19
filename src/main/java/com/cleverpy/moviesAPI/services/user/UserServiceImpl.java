@@ -3,6 +3,7 @@ package com.cleverpy.moviesAPI.services.user;
 import com.cleverpy.moviesAPI.dto.user.NewUserDto;
 import com.cleverpy.moviesAPI.dto.user.UpdateUserDto;
 import com.cleverpy.moviesAPI.dto.user.UserResponseDto;
+import com.cleverpy.moviesAPI.dto.user.UsersPageDto;
 import com.cleverpy.moviesAPI.entities.Role;
 import com.cleverpy.moviesAPI.entities.User;
 import com.cleverpy.moviesAPI.repositories.RoleRepository;
@@ -11,6 +12,9 @@ import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.sparkpost.SparkPostServiceImpl;
 import com.sparkpost.exception.SparkPostException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -95,7 +99,7 @@ public class UserServiceImpl implements UserService {
      * @return ResponseEntity (ok: UserResponseDto, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> getUser(Long id, String username) {
+    public ResponseEntity<?> getById(Long id, String username) {
 
         Optional<User> userOpt = userRepository.findById(id);
         Optional<User> userConnecting = userRepository.findByUsername(username);
@@ -120,17 +124,23 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to get all users
-     * @return List with UserResponseDto
+     * @return ResponseEntity (UsersPageDto, no content)
      */
     @Override
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<?> getAllUsers(Integer pageNumber) {
 
-        //Gets all users
-        List<User> users = userRepository.findAll();
-        List<UserResponseDto> response = new ArrayList<UserResponseDto>();
-        for (User user : users) response.add(user.getDto(" "));
+        Pageable page = PageRequest.of(pageNumber, 10);
+        Page<User> users = userRepository.findAll(page);
 
-        return ResponseEntity.ok(response);
+        if (users.toList().size() == 0)
+            return ResponseEntity.noContent().build();
+
+        List<UserResponseDto> usersDto = new ArrayList<UserResponseDto>();
+        for (User user : users) usersDto.add(user.getDto(" "));
+
+        return ResponseEntity.ok(new UsersPageDto(
+                users.getTotalPages(), users.getTotalElements(), usersDto
+        ));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.cleverpy.moviesAPI.services.productionCompany;
 
+import com.cleverpy.moviesAPI.dto.productionCompany.ProductionCompaniesPageDto;
 import com.cleverpy.moviesAPI.dto.productionCompany.ProductionCompanyDto;
 import com.cleverpy.moviesAPI.entities.Movie;
 import com.cleverpy.moviesAPI.entities.ProductionCompany;
@@ -7,6 +8,9 @@ import com.cleverpy.moviesAPI.repositories.MovieRepository;
 import com.cleverpy.moviesAPI.repositories.ProductionCompanyRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -74,20 +78,23 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
 
     /**
      * Method to get all Production Companies
-     * @return ResponseEntity (List<productionCompanyDto>, no content)
+     * @return ResponseEntity (ProductionCompaniesPageDto, no content)
      */
     @Override
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(Integer pageNumber) {
 
-        List<ProductionCompany> companies = companyRepository.findAll();
+        Pageable page = PageRequest.of(pageNumber, 10);
+        Page<ProductionCompany> companies = companyRepository.findAll(page);
 
-        if (companies.size() == 0)
+        if (companies.toList().size() == 0)
             return ResponseEntity.noContent().build();
 
         List<ProductionCompanyDto> companiesDto = new ArrayList<>();
         for (ProductionCompany company : companies) companiesDto.add(company.getDto());
 
-        return ResponseEntity.ok(companiesDto);
+        return ResponseEntity.ok(new ProductionCompaniesPageDto(
+                companies.getTotalPages(), companies.getTotalElements(), companiesDto
+        ));
     }
 
     /**

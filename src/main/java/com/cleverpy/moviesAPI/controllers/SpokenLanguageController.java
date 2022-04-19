@@ -62,13 +62,13 @@ public class SpokenLanguageController {
 
     /**
      * Endpoint to get all Production Countries
-     * @return ResponseEntity (ok: List<SpokenLanguageDto>, no content)
+     * @return ResponseEntity (ok: SpokenLanguagesPageDto, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/")
+    @GetMapping("/page/{page_number}")
     @ApiOperation("Gets all Spoken Languages. Authentication required (USER)")
-    public ResponseEntity<?> getAll(){
-        return languageService.getAll();
+    public ResponseEntity<?> getAll(@PathVariable Integer page_number){
+        return languageService.getAll(page_number);
     }
 
     /**

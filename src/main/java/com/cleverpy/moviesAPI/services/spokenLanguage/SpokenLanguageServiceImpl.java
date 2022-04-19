@@ -1,12 +1,16 @@
 package com.cleverpy.moviesAPI.services.spokenLanguage;
 
 import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguageDto;
+import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguagesPageDto;
 import com.cleverpy.moviesAPI.entities.Movie;
 import com.cleverpy.moviesAPI.entities.SpokenLanguage;
 import com.cleverpy.moviesAPI.repositories.MovieRepository;
 import com.cleverpy.moviesAPI.repositories.SpokenLanguageRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -74,20 +78,23 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
 
     /**
      * Method to get all Spoken Languages
-     * @return ResponseEntity (List<spokenLanguageDto>, no content)
+     * @return ResponseEntity (SpokenLanguagesPageDto, no content)
      */
     @Override
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(Integer pageNumber) {
 
-        List<SpokenLanguage> languages = languageRepository.findAll();
+        Pageable page = PageRequest.of(pageNumber, 10);
+        Page<SpokenLanguage> languages = languageRepository.findAll(page);
 
-        if (languages.size() == 0)
+        if (languages.toList().size() == 0)
             return ResponseEntity.noContent().build();
 
         List<SpokenLanguageDto> languagesDto = new ArrayList<>();
         for (SpokenLanguage language : languages) languagesDto.add(language.getDto());
 
-        return ResponseEntity.ok(languagesDto);
+        return ResponseEntity.ok(new SpokenLanguagesPageDto(
+                languages.getTotalPages(), languages.getTotalElements(), languagesDto
+        ));
     }
 
     /**

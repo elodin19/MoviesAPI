@@ -1,10 +1,11 @@
 package com.cleverpy.moviesAPI.repositories;
 
 import com.cleverpy.moviesAPI.entities.ProductionCompany;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,6 +18,6 @@ public interface ProductionCompanyRepository extends JpaRepository<ProductionCom
     boolean existsByName(String name);
     boolean existsByLogoPath(String logoPath);
     Optional<ProductionCompany> findById(Long id);
-    List<ProductionCompany> findAll();
+    Page<ProductionCompany> findAll(Pageable page);
 
 }

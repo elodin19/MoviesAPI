@@ -59,13 +59,13 @@ public class ProductionCountryController {
 
     /**
      * Endpoint to get all Production Countries
-     * @return ResponseEntity (ok: List<ProductionCountry>, no content)
+     * @return ResponseEntity (ok: ProductionCountriesPageDto, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/")
+    @GetMapping("/page/{page_number}")
     @ApiOperation("Gets all Production Countries. Authentication required (USER)")
-    public ResponseEntity<?> getAll(){
-        return countryService.getAll();
+    public ResponseEntity<?> getAll(@PathVariable Integer page_number){
+        return countryService.getAll(page_number);
     }
 
     /**

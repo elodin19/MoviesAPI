@@ -65,13 +65,13 @@ public class ProductionCompanyController {
 
     /**
      * Endpoint to get all Production Companies
-     * @return ResponseEntity (ok: List<ProductionCompany>, no content)
+     * @return ResponseEntity (ok: ProductionCompaniesPageDto, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/")
+    @GetMapping("/page/{page_number}")
     @ApiOperation("Gets all Production Companies. Authentication required (USER)")
-    public ResponseEntity<?> getAll(){
-        return companyService.getAll();
+    public ResponseEntity<?> getAll(@PathVariable Integer page_number){
+        return companyService.getAll(page_number);
     }
 
     /**
