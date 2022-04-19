@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementation of the Production Company Service Implementation
+ * Implementation of the Production Company Service
  */
 @Service
 public class ProductionCompanyServiceImpl implements ProductionCompanyService {
@@ -33,6 +33,7 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
 
     /**
      * Method to create a new Production Company
+     * Tests if name or pathLogo aren't being used yet
      * @param companyDto
      * @return ResponseEntity (ok: productionCompanyDto, bad request: messageResponse)
      */
@@ -109,6 +110,7 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
 
     /**
      * Method to update the Production Company
+     * Tests if name or logoPath aren't being used yet
      * @param id
      * @param companyDto
      * @return ResponseEntity (ok: companyDto, bad request: messageResponse)
@@ -157,14 +159,13 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
                     movie.getProductionCompanies().remove(companyOpt.get());
                     if (movie.getProductionCompanies().size() < 1)
                         movieRepository.delete(movie);
+                    else
+                        movieRepository.save(movie);
                 }
             }
         }
 
-        //Delete the company
         companyRepository.delete(companyOpt.get());
-
         return ResponseEntity.ok(new MessageResponse("Production Company " + id + " deleted with success"));
-
     }
 }

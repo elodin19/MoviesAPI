@@ -89,7 +89,8 @@ public class ProductionCountryController {
      * Endpoint to update the Production Country
      * Name and iso are mandatory and must be unique
      * @param country_id
-     * @return
+     * @param countryDto
+     * @return ResponseEntity (ok: ProductionCountryDto, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{country_id}")

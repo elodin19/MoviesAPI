@@ -33,6 +33,7 @@ public class ProductionCountryServiceImpl implements ProductionCountryService{
 
     /**
      * Method to create a new Production Country
+     * Tests if name and logoPath aren't being used yet
      * @param countryDto
      * @return ResponseEntity (ok: productionCountryDto, bad request: messageResponse)
      */
@@ -107,6 +108,7 @@ public class ProductionCountryServiceImpl implements ProductionCountryService{
 
     /**
      * Method to update the Production Country
+     * Tests if name and logoPath aren't being used yet
      * @param id
      * @param countryDto
      * @return ResponseEntity (ok: countryDto, bad request: messageResponse)
@@ -153,13 +155,13 @@ public class ProductionCountryServiceImpl implements ProductionCountryService{
                     movie.getProductionCountries().remove(countryOpt.get());
                     if(movie.getProductionCountries().size() < 1)
                         movieRepository.delete(movie);
+                    else
+                        movieRepository.save(movie);
                 }
             }
         }
 
-        //Delete the country
         countryRepository.delete(countryOpt.get());
-
         return ResponseEntity.ok(new MessageResponse("Production Country " + id + " deleted with success"));
     }
 }

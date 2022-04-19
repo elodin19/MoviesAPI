@@ -33,6 +33,7 @@ public class GenreServiceImpl implements GenreService {
 
     /**
      * Method to create a new genre
+     * Tests if the name isn't being used yet
      * @param genreDto
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
      */
@@ -102,6 +103,7 @@ public class GenreServiceImpl implements GenreService {
 
     /**
      * Method to update the name of a genre
+     * Tests if the name isn't being used yet
      * @param id
      * @param genreDto
      * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
@@ -143,13 +145,13 @@ public class GenreServiceImpl implements GenreService {
                     movie.getGenres().remove(genreOpt.get());
                     if (movie.getGenres().size() < 1)
                         movieRepository.delete(movie);
+                    else
+                        movieRepository.save(movie);
                 }
             }
         }
 
-        //Deletes the genre
         genreRepository.delete(genreOpt.get());
-
         return ResponseEntity.ok(new MessageResponse("Genre " + id + " deleted with success"));
     }
 }

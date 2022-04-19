@@ -1,5 +1,6 @@
 package com.cleverpy.moviesAPI.entities;
 
+import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguageDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,11 +27,15 @@ public class SpokenLanguage {
     private String englishName;
 
     @Column(nullable = false, unique = true)
-    private String iso_639_1;
+    private String iso;
 
     @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "spokenLanguages")
     private List<Movie> movies = new ArrayList<>();
+
+    public SpokenLanguageDto getDto(){
+        return new SpokenLanguageDto(id, englishName, iso, name);
+    }
 }
