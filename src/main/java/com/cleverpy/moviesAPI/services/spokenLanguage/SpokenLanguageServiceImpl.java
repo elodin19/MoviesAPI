@@ -1,10 +1,7 @@
 package com.cleverpy.moviesAPI.services.spokenLanguage;
 
-import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguageDto;
-import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguagesPageDto;
-import com.cleverpy.moviesAPI.entities.Movie;
+import com.cleverpy.moviesAPI.dto.SpokenLanguageDto;
 import com.cleverpy.moviesAPI.entities.SpokenLanguage;
-import com.cleverpy.moviesAPI.repositories.MovieRepository;
 import com.cleverpy.moviesAPI.repositories.SpokenLanguageRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,19 +22,15 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
     @Autowired
     private SpokenLanguageRepository languageRepository;
 
-    @Autowired
-    private MovieRepository movieRepository;
-
-    public SpokenLanguageServiceImpl(SpokenLanguageRepository languageRepository, MovieRepository movieRepository) {
+    public SpokenLanguageServiceImpl(SpokenLanguageRepository languageRepository) {
         this.languageRepository = languageRepository;
-        this.movieRepository = movieRepository;
     }
 
     /**
      * Method to create a new Spoken Language
      * Tests if name and iso aren't being used yet
      * @param languageDto
-     * @return ResponseEntity (ok: spokenLanguageDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: SpokenLanguage, bad request: messageResponse)
      */
     @Override
     public ResponseEntity<?> create(SpokenLanguageDto languageDto) {
@@ -55,17 +46,17 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
                     .body(new MessageResponse("The iso " + languageDto.getIso() + " is already registered"));
 
         //Creates and saves the new language
-        SpokenLanguage language = new SpokenLanguage(null, languageDto.getEnglishName(), languageDto.getIso(),
-                languageDto.getName(), null);
+        SpokenLanguage language = new SpokenLanguage(null, languageDto.getEnglish_name(), languageDto.getIso(),
+                languageDto.getName());
         languageRepository.save(language);
 
-        return ResponseEntity.ok(language.getDto());
+        return ResponseEntity.ok(language);
     }
 
     /**
      * Method to get the Spoken Language data
      * @param id
-     * @return ResponseEntity (ok: spokenLanguageDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: spokenLanguage, bad request: messageResponse)
      */
     @Override
     public ResponseEntity<?> getById(Long id) {
@@ -73,12 +64,12 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
         //Gets the language
         Optional<SpokenLanguage> languageOpt = languageRepository.findById(id);
 
-        return ResponseEntity.ok(languageOpt.get().getDto());
+        return ResponseEntity.ok(languageOpt.get());
     }
 
     /**
      * Method to get all Spoken Languages
-     * @return ResponseEntity (SpokenLanguagesPageDto, no content)
+     * @return ResponseEntity (Page<SpokenLanguages>, no content)
      */
     @Override
     public ResponseEntity<?> getAll(Integer pageNumber) {
@@ -89,29 +80,7 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
         if (languages.toList().size() == 0)
             return ResponseEntity.noContent().build();
 
-        List<SpokenLanguageDto> languagesDto = new ArrayList<>();
-        for (SpokenLanguage language : languages) languagesDto.add(language.getDto());
-
-        return ResponseEntity.ok(new SpokenLanguagesPageDto(
-                languages.getTotalPages(), languages.getTotalElements(), languagesDto
-        ));
-    }
-
-    /**
-     * Method to get all the movies from a specific Spoken Language
-     * @param id
-     * @return ResponseEntity (ok: List<Movie>, no content)
-     */
-    @Override
-    public ResponseEntity<?> getMovies(Long id) {
-
-        //Gets the language
-        Optional<SpokenLanguage> languageOpt = languageRepository.findById(id);
-
-        if (languageOpt.get().getMovies().size() == 0)
-            return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok(languageOpt.get().getMovies());
+        return ResponseEntity.ok(languages);
     }
 
     /**
@@ -119,7 +88,7 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
      * Tests if name and iso aren't being used yet
      * @param id
      * @param languageDto
-     * @return ResponseEntity (ok: languageDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: SpokenLanguage, bad request: messageResponse)
      */
     @Override
     public ResponseEntity<?> update(Long id, SpokenLanguageDto languageDto) {
@@ -139,10 +108,10 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
         //Updates and saves the spoken language
         languageOpt.get().setName(languageDto.getName());
         languageOpt.get().setIso(languageDto.getIso());
-        languageOpt.get().setEnglishName(languageDto.getEnglishName());
+        languageOpt.get().setEnglish_name(languageDto.getEnglish_name());
         languageRepository.save(languageOpt.get());
 
-        return ResponseEntity.ok(languageOpt.get().getDto());
+        return ResponseEntity.ok(languageOpt.get());
 
     }
 
@@ -157,19 +126,6 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
 
         //Gets the language
         Optional<SpokenLanguage> languageOpt = languageRepository.findById(id);
-
-        //Check the movies to see if they need to be removed too
-        for (Movie movie : languageOpt.get().getMovies()){
-            for (SpokenLanguage language : movie.getSpokenLanguages()){
-                if (language.equals(languageOpt.get())){
-                    movie.getSpokenLanguages().remove(languageOpt.get());
-                    if (movie.getSpokenLanguages().size() == 0)
-                        movieRepository.delete(movie);
-                    else
-                        movieRepository.save(movie);
-                }
-            }
-        }
 
         languageRepository.delete(languageOpt.get());
         return ResponseEntity.ok(new MessageResponse("Spoken Language " + id + " deleted with success"));

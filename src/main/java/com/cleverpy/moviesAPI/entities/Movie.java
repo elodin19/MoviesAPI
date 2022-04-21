@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class Movie {
     @Column(nullable = false)
     private Boolean adult;
 
-    @Column(name = "backdrop_path", unique = true)
+    @Column(name = "backdrop_path")
     private String backdropPath;
 
     @Column(nullable = false)
@@ -35,15 +34,15 @@ public class Movie {
     private String homepage;
 
     @Column(unique = true)
-    private String imdb_id;
+    private String imdbId;
 
-    @Column(name = "original_language", nullable = false, length = 2)
+    @Column(name = "original_language", nullable = false)
     private String originalLanguage;
 
-    @Column(name = "original_title", unique = true, nullable = false)
+    @Column(name = "original_title", nullable = false)
     private String originalTitle;
 
-    @Column(unique = true, nullable = false, length = 512)
+    @Column(unique = true, nullable = false, length = 1024)
     private String overview;
 
     @Column(nullable = false)
@@ -53,7 +52,7 @@ public class Movie {
     private String posterPath;
 
     @Column(name = "release_date", nullable = false)
-    private Date releaseDate;
+    private String releaseDate;
 
     @Column(nullable = false)
     private Long revenue;
@@ -64,7 +63,7 @@ public class Movie {
 
     private String tagline;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)

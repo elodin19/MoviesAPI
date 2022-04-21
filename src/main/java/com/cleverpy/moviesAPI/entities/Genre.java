@@ -1,13 +1,10 @@
 package com.cleverpy.moviesAPI.entities;
 
-import com.cleverpy.moviesAPI.dto.genre.GenreDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Entity that manages the Genres in the database
@@ -25,11 +22,4 @@ public class Genre {
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies = new ArrayList<>();
-
-    public GenreDto getDto(){
-        return new GenreDto(id, name);
-    }
 }

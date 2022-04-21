@@ -18,5 +18,6 @@ public interface SpokenLanguageRepository extends JpaRepository<SpokenLanguage, 
     boolean existsByName(String name);
     boolean existsByIso(String iso);
     Optional<SpokenLanguage> findById(Long id);
+    Optional<SpokenLanguage> findByName(String name);
     Page<SpokenLanguage> findAll(Pageable page);
 }

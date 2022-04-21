@@ -1,7 +1,6 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.user.NewUserDto;
-import com.cleverpy.moviesAPI.dto.user.UpdateUserDto;
+import com.cleverpy.moviesAPI.dto.UserDto;
 import com.cleverpy.moviesAPI.repositories.UserRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.user.UserServiceImpl;
@@ -33,15 +32,13 @@ public class UserController {
      * Email, username and password and mandatory
      * Email and username must be unique
      * @param newUser
-     * @return ResponseEntity (ok: NewUserResponse, bad request: messageResponse)
+     * @return ResponseEntity (ok: User, bad request: messageResponse)
      */
-    @PostMapping("/new-user")
+    @PostMapping("/")
     @ApiOperation("Creates new user")
-    public ResponseEntity<?> createUser(@Valid @RequestBody NewUserDto newUser){
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto newUser){
         return userService.createUser(newUser);
     }
-
-    //TODO: Refactor users - look for @Valid @NotBlank comments and pagenation
 
     /**
      * Gets the user data
@@ -63,7 +60,7 @@ public class UserController {
 
     /**
      * Gets all users
-     * @return ResponseEntity (ok: UsersPageDto, no content)
+     * @return ResponseEntity (ok: Page<User>, no content)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/page/{page_number}")
@@ -82,7 +79,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/{id}")
     @ApiOperation("Updates user. Authentication required (USER)")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UpdateUserDto userDto,
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto,
                                     @CurrentSecurityContext(expression="authentication?.name") String username){
 
         //Validates the id

@@ -1,7 +1,6 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.productionCountry.ProductionCountryDto;
-import com.cleverpy.moviesAPI.dto.spokenLanguage.SpokenLanguageDto;
+import com.cleverpy.moviesAPI.dto.SpokenLanguageDto;
 import com.cleverpy.moviesAPI.repositories.SpokenLanguageRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.spokenLanguage.SpokenLanguageServiceImpl;
@@ -33,7 +32,7 @@ public class SpokenLanguageController {
      * Name, englishName and iso are mandatory
      * Name and iso must be unique
      * @param languageDto
-     * @return ResponseEntity (ok: SpokenLanguageDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: SpokenLanguage, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
@@ -46,7 +45,7 @@ public class SpokenLanguageController {
     /**
      * Endpoint to get a Spoken Language by id
      * @param language_id
-     * @return ResponseEntity (ok: SpokenLanguageDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: SpokenLanguage, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{language_id}")
@@ -62,7 +61,7 @@ public class SpokenLanguageController {
 
     /**
      * Endpoint to get all Production Countries
-     * @return ResponseEntity (ok: SpokenLanguagesPageDto, no content)
+     * @return ResponseEntity (ok: Page<SpokenLanguage>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/page/{page_number}")
@@ -72,29 +71,12 @@ public class SpokenLanguageController {
     }
 
     /**
-     * Endpoint to get movies by Production Country
-     * @param language_id
-     * @return ResponseEntity (ok: List<movies>, no content)
-     */
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/movies/{language_id}")
-    @ApiOperation("Gets movies by Spoken Language. Authentication required (USER)")
-    public ResponseEntity<?> getMovies(@PathVariable Long language_id){
-
-        //Validates id
-        if (!languageRepository.existsById(language_id))
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
-
-        return languageService.getMovies(language_id);
-    }
-
-    /**
      * Endpoint to update the Spoken Language
      * Name, englishName and iso are mandatory
      * Name and iso must be unique
      * @param language_id
      * @param languageDto
-     * @return ResponseEntity (ok: ProductionCountryDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: SpokenLanguage, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{language_id}")

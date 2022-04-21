@@ -18,6 +18,7 @@ public interface ProductionCompanyRepository extends JpaRepository<ProductionCom
     boolean existsByName(String name);
     boolean existsByLogoPath(String logoPath);
     Optional<ProductionCompany> findById(Long id);
+    Optional<ProductionCompany> findByName(String name);
     Page<ProductionCompany> findAll(Pageable page);
 
 }

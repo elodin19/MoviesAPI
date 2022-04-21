@@ -1,4 +1,4 @@
-package com.cleverpy.moviesAPI.dto.genre;
+package com.cleverpy.moviesAPI.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

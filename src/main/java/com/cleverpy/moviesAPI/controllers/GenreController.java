@@ -1,6 +1,6 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.genre.GenreDto;
+import com.cleverpy.moviesAPI.dto.GenreDto;
 import com.cleverpy.moviesAPI.repositories.GenreRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.genre.GenreServiceImpl;
@@ -30,7 +30,7 @@ public class GenreController {
      * Endpoint to create a new Genre
      * Name is mandatory and must be unique
      * @param genreDto
-     * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: Genre, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
@@ -42,7 +42,7 @@ public class GenreController {
     /**
      * Endpoint to get a Genre by id
      * @param genre_id
-     * @return ResponseEntity (ok: genreDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: Genre, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{genre_id}")
@@ -58,7 +58,7 @@ public class GenreController {
 
     /**
      * Endpoint to get all Genres
-     * @return ResponseEntity (ok: GenresPageDto, no content)
+     * @return ResponseEntity (ok: Page<Genre>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/page/{page_number}")
@@ -68,27 +68,10 @@ public class GenreController {
     }
 
     /**
-     * Endpoint to get movies by Genre
-     * @param genre_id
-     * @return ResponseEntity (ok: List<movies>, no content)
-     */
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/movies/{genre_id}")
-    @ApiOperation("Gets movies by Genre. Authentication required (USER)")
-    public ResponseEntity<?> getMovies(@PathVariable Long genre_id){
-
-        //Validates id
-        if (!genreRepository.existsById(genre_id))
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
-
-        return genreService.getMovies(genre_id);
-    }
-
-    /**
      * Endpoint to update the Genre
      * Name is mandatory and must be unique
      * @param genre_id
-     * @return ResponseEntity (ok: GenreDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: Genre, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{genre_id}")

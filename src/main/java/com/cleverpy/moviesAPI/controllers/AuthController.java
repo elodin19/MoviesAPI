@@ -1,15 +1,11 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.auth.ActivateUserDto;
-import com.cleverpy.moviesAPI.dto.auth.ForgotPassDto;
-import com.cleverpy.moviesAPI.dto.auth.NewPassDto;
 import com.cleverpy.moviesAPI.entities.User;
 import com.cleverpy.moviesAPI.repositories.UserRepository;
 import com.cleverpy.moviesAPI.security.jwt.JwtTokenUtil;
 import com.cleverpy.moviesAPI.security.payload.JwtResponse;
 import com.cleverpy.moviesAPI.security.payload.LoginRequest;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
-import com.cleverpy.moviesAPI.services.auth.AuthService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,14 +32,11 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
-    private final AuthService authService;
 
-    public AuthController(AuthenticationManager authManager, JwtTokenUtil jwtTokenUtil, UserRepository userRepository,
-                          AuthService authService) {
+    public AuthController(AuthenticationManager authManager, JwtTokenUtil jwtTokenUtil, UserRepository userRepository) {
         this.authManager = authManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
-        this.authService = authService;
     }
 
     /**
@@ -75,70 +68,4 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
-    /**
-     * Method to activate the user
-     * * The user won't be able to log in before activating the account!
-     * Username and activation code are mandatory
-     * @param activateUser
-     * @return ResponseEntity
-     */
-    @PostMapping("/activate-user")
-    @ApiOperation("Activates the new user")
-    public ResponseEntity<?> activateUser(@Valid @RequestBody ActivateUserDto activateUser){
-
-        //Validates de user
-        Optional<User> userOpt = userRepository.findByUsername(activateUser.getUsername());
-
-        if (!userOpt.isPresent())
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("The user" + activateUser.getUsername() + " doesn't exist"));
-
-        return authService.activateUser(userOpt.get(), activateUser.getActivationCode());
-    }
-
-    /**
-     * Method to ask for a new password
-     * Email is mandatory
-     * @param forgotPass
-     * @return ResponseEntity (MessageReponse)
-     */
-    @PostMapping("/forgot-pass")
-    @ApiOperation("Asks for a new password")
-    public ResponseEntity<?> forgotPass(@Valid @RequestBody ForgotPassDto forgotPass){
-
-        //Validates the user
-        Optional<User> userOpt = userRepository.findByEmail(forgotPass.getEmail());
-
-        if (!userOpt.isPresent())
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("The email " + forgotPass.getEmail() + " isn't registered"));
-
-        return authService.forgotPass(userOpt.get());
-    }
-
-    /**
-     * Method that sets a new password to the user
-     * Username, newPass and validationCode are mandatory
-     * @param newPass
-     * @return ResponseEntity (MessageResponse)
-     */
-    @PostMapping("/save-pass")
-    @ApiOperation("Save new password")
-    public ResponseEntity<?> setNewPass(@Valid @RequestBody NewPassDto newPass){
-
-        //Validates the DTO
-        if (newPass.getUsername() == null ||
-                newPass.getNewPass() == null ||
-                newPass.getValidationCode() == null)
-            return ResponseEntity.badRequest().body(new MessageResponse("Missing parameters"));
-
-        //Validates de user
-        Optional<User> userOpt = userRepository.findByUsername(newPass.getUsername());
-
-        if (!userOpt.isPresent())
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("The user" + newPass.getUsername() + " doesn't exist"));
-
-        return authService.setNewPass(userOpt.get(), newPass.getNewPass(), newPass.getValidationCode());
-    }
 }

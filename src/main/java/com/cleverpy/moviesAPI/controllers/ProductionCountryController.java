@@ -1,6 +1,6 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.productionCountry.ProductionCountryDto;
+import com.cleverpy.moviesAPI.dto.ProductionCountryDto;
 import com.cleverpy.moviesAPI.repositories.ProductionCountryRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.productionCountry.ProductionCountryServiceImpl;
@@ -31,19 +31,23 @@ public class ProductionCountryController {
      * Endpoint to create a new Production Country
      * Name and iso are mandatory and must be unique
      * @param countryDto
-     * @return ResponseEntity (ok: ProductionCountryDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCountry, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
     @ApiOperation("Creates new Production Country. Authentication required (ADMIN). Name and iso are mandatory and must be unique")
     public ResponseEntity<?> createCountry(@Valid @RequestBody ProductionCountryDto countryDto){
+
+        if (countryDto.getIso().length() != 2)
+            return ResponseEntity.badRequest().body(new MessageResponse("Origin Country must have a length of 2"));
+
         return countryService.create(countryDto);
     }
 
     /**
      * Endpoint to get a Production Country by id
      * @param country_id
-     * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCountry, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{country_id}")
@@ -59,7 +63,7 @@ public class ProductionCountryController {
 
     /**
      * Endpoint to get all Production Countries
-     * @return ResponseEntity (ok: ProductionCountriesPageDto, no content)
+     * @return ResponseEntity (ok: Page<ProductionCountry>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/page/{page_number}")
@@ -69,28 +73,11 @@ public class ProductionCountryController {
     }
 
     /**
-     * Endpoint to get movies by Production Country
-     * @param country_id
-     * @return ResponseEntity (ok: List<movies>, no content)
-     */
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/movies/{country_id}")
-    @ApiOperation("Gets movies by Production Country. Authentication required (USER)")
-    public ResponseEntity<?> getMovies(@PathVariable Long country_id){
-
-        //Validates id
-        if (!countryRepository.existsById(country_id))
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
-
-        return countryService.getMovies(country_id);
-    }
-
-    /**
      * Endpoint to update the Production Country
      * Name and iso are mandatory and must be unique
      * @param country_id
      * @param countryDto
-     * @return ResponseEntity (ok: ProductionCountryDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCountry, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{country_id}")

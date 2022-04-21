@@ -75,12 +75,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sparkpost</groupId>
-			<artifactId>sparkpost-lib</artifactId>
-			<version>0.19</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>4.4.0</version>
@@ -89,6 +83,12 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20220320</version>
 		</dependency>
 
 	</dependencies>

@@ -1,13 +1,10 @@
 package com.cleverpy.moviesAPI.entities;
 
-import com.cleverpy.moviesAPI.dto.productionCompany.ProductionCompanyDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Entity that manages the Production Companies in the database
@@ -26,16 +23,9 @@ public class ProductionCompany {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(name = "logo_path", unique = true)
+    @Column(name = "logo_path")
     private String logoPath;
 
-    @Column(name = "origin_country", nullable = false, length = 2)
+    @Column(name = "origin_country", length = 2)
     private String originCountry;
-
-    @ManyToMany(mappedBy = "productionCompanies")
-    private List<Movie> movies = new ArrayList<>();
-
-    public ProductionCompanyDto getDto(){
-        return new ProductionCompanyDto(id, name, logoPath, originCountry);
-    }
 }

@@ -1,6 +1,6 @@
 package com.cleverpy.moviesAPI.controllers;
 
-import com.cleverpy.moviesAPI.dto.productionCompany.ProductionCompanyDto;
+import com.cleverpy.moviesAPI.dto.ProductionCompanyDto;
 import com.cleverpy.moviesAPI.repositories.ProductionCompanyRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
 import com.cleverpy.moviesAPI.services.productionCompany.ProductionCompanyServiceImpl;
@@ -32,7 +32,7 @@ public class ProductionCompanyController {
      * Name, logoPath and OriginCountry are mandatory
      * Name and logoPath must be unique
      * @param companyDto
-     * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCompany, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/")
@@ -40,7 +40,7 @@ public class ProductionCompanyController {
             "Name and logoPath must be unique")
     public ResponseEntity<?> createCompany(@Valid @RequestBody ProductionCompanyDto companyDto){
 
-        if (companyDto.getOriginCountry().length() != 2)
+        if (companyDto.getOrigin_country().length() != 2)
             return ResponseEntity.badRequest().body(new MessageResponse("Origin Country must have a length of 2"));
 
         return companyService.create(companyDto);
@@ -49,7 +49,7 @@ public class ProductionCompanyController {
     /**
      * Endpoint to get a Production Company by id
      * @param company_id
-     * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCompany, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{company_id}")
@@ -65,7 +65,7 @@ public class ProductionCompanyController {
 
     /**
      * Endpoint to get all Production Companies
-     * @return ResponseEntity (ok: ProductionCompaniesPageDto, no content)
+     * @return ResponseEntity (ok: Page<ProductionCompany>, no content)
      */
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/page/{page_number}")
@@ -75,28 +75,11 @@ public class ProductionCompanyController {
     }
 
     /**
-     * Endpoint to get movies by Production Company
-     * @param company_id
-     * @return ResponseEntity (ok: List<movies>, no content)
-     */
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/movies/{company_id}")
-    @ApiOperation("Gets movies by Production Company. Authentication required (USER)")
-    public ResponseEntity<?> getMovies(@PathVariable Long company_id){
-
-        //Validates id
-        if (!companyRepository.existsById(company_id))
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid id"));
-
-        return companyService.getMovies(company_id);
-    }
-
-    /**
      * Endpoint to update the Production Company
      * Name, logoPath and OriginCountry are mandatory
      * Name and logoPath must be unique
      * @param company_id
-     * @return ResponseEntity (ok: ProductionCompanyDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: ProductionCompany, bad request: messageResponse)
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{company_id}")

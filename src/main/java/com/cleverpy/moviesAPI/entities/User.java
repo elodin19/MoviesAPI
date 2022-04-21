@@ -1,12 +1,10 @@
 package com.cleverpy.moviesAPI.entities;
 
-import com.cleverpy.moviesAPI.dto.user.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +31,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "activation_code")
-    private Integer activationCode;
-
-    @Column(name = "is_activated")
-    private Boolean isActivated = false;
-
-    @Column(name = "validation_code")
-    private Integer validationCode;
-
-    @Column(name = "time_stamp")
-    private Timestamp timeStamp;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_ROLES",
             joinColumns = {
@@ -59,13 +45,5 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
-    }
-
-    public UserResponseDto getDto(String message){
-
-        List<String> strRoles = new ArrayList<>();
-        for (Role role : roles) strRoles.add(role.getName());
-
-        return new UserResponseDto(username, email, isActivated, strRoles, message);
     }
 }

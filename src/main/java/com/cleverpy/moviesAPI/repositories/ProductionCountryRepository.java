@@ -18,6 +18,7 @@ public interface ProductionCountryRepository extends JpaRepository<ProductionCou
     boolean existsByName(String name);
     boolean existsByIso(String iso);
     Optional<ProductionCountry> findById(Long id);
+    Optional<ProductionCountry> findByName(String name);
     Page<ProductionCountry> findAll(Pageable page);
 
 }

@@ -1,16 +1,11 @@
 package com.cleverpy.moviesAPI.services.user;
 
-import com.cleverpy.moviesAPI.dto.user.NewUserDto;
-import com.cleverpy.moviesAPI.dto.user.UpdateUserDto;
-import com.cleverpy.moviesAPI.dto.user.UserResponseDto;
-import com.cleverpy.moviesAPI.dto.user.UsersPageDto;
+import com.cleverpy.moviesAPI.dto.UserDto;
 import com.cleverpy.moviesAPI.entities.Role;
 import com.cleverpy.moviesAPI.entities.User;
 import com.cleverpy.moviesAPI.repositories.RoleRepository;
 import com.cleverpy.moviesAPI.repositories.UserRepository;
 import com.cleverpy.moviesAPI.security.payload.MessageResponse;
-import com.cleverpy.moviesAPI.services.sparkpost.SparkPostServiceImpl;
-import com.sparkpost.exception.SparkPostException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,26 +33,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final PasswordEncoder encoder;
 
-    @Autowired
-    private final SparkPostServiceImpl sparkPost;
-
-    private final Long EXPIRATION = 30000L; // ms equivalent to 5 minutes
-
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           PasswordEncoder encoder, SparkPostServiceImpl sparkPost) {
+                           PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
-        this.sparkPost = sparkPost;
     }
 
     /**
      * Method to create a new user
      * @param newUser (NewUserRequest)
-     * @return ResponseEntity (ok: userDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: User, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> createUser(NewUserDto newUser) {
+    public ResponseEntity<?> createUser(UserDto newUser) {
 
         //Access the repository to check if the username isn't being used yet
         Optional<User> userOpt = userRepository.findByUsername(newUser.getUsername());
@@ -83,20 +72,13 @@ public class UserServiceImpl implements UserService {
         //Saves the user in the database
         userRepository.save(user);
 
-        //Sends an email with the validation code;
-        try {
-            sparkPost.sendActivationMessage(user);
-        } catch (SparkPostException e){
-            System.err.println("Error: " + e.getMessage());
-        }
-
-        return ResponseEntity.ok().body(user.getDto("Check your email account"));
+        return ResponseEntity.ok().body(user);
     }
 
     /**
      * Method to get user
      * @param id
-     * @return ResponseEntity (ok: UserResponseDto, bad request: messageResponse)
+     * @return ResponseEntity (ok: User, bad request: messageResponse)
      */
     @Override
     public ResponseEntity<?> getById(Long id, String username) {
@@ -119,12 +101,12 @@ public class UserServiceImpl implements UserService {
                                 + id));
         }
 
-        return ResponseEntity.ok(userOpt.get().getDto(" "));
+        return ResponseEntity.ok(userOpt.get());
     }
 
     /**
      * Method to get all users
-     * @return ResponseEntity (UsersPageDto, no content)
+     * @return ResponseEntity (Page<User>, no content)
      */
     @Override
     public ResponseEntity<?> getAllUsers(Integer pageNumber) {
@@ -135,12 +117,7 @@ public class UserServiceImpl implements UserService {
         if (users.toList().size() == 0)
             return ResponseEntity.noContent().build();
 
-        List<UserResponseDto> usersDto = new ArrayList<UserResponseDto>();
-        for (User user : users) usersDto.add(user.getDto(" "));
-
-        return ResponseEntity.ok(new UsersPageDto(
-                users.getTotalPages(), users.getTotalElements(), usersDto
-        ));
+        return ResponseEntity.ok(users);
     }
 
     /**
@@ -151,7 +128,7 @@ public class UserServiceImpl implements UserService {
      * @return ResponseEntity (ok: User, bad request: messageResponse)
      */
     @Override
-    public ResponseEntity<?> updateUser(Long id, UpdateUserDto userDto, String username) {
+    public ResponseEntity<?> updateUser(Long id, UserDto userDto, String username) {
 
         //Get Users
         Optional<User> userOpt = userRepository.findById(id);
@@ -185,43 +162,14 @@ public class UserServiceImpl implements UserService {
                     .body(new MessageResponse("This email is already being used" ));
         }
 
-        //If the email is different from the original, sets isActivated to false and sends a new activation code
-        else if (userOpt.get().getEmail() != userDto.getEmail()) {
-
-            //Starts updating
-            userOpt.get().setUsername(userDto.getUsername());
-            userOpt.get().setEmail(userDto.getEmail());
-            userOpt.get().setIsActivated(false);
-            userRepository.save(userOpt.get());
-
-            //Sends an email to the user
-            try {
-                sparkPost.sendActivationMessage(userOpt.get());
-            } catch (Exception e){
-                System.out.println("Error :" + e.getMessage());
-            }
-
-            return ResponseEntity.ok(userOpt.get()
-                    .getDto("Since your email address has changed, check you email account for the new activation code"));
-        }
-
         //Starts updating
         userOpt.get().setUsername(userDto.getUsername());
         userOpt.get().setEmail(userDto.getEmail());
-
-        if (userDto.getIsActivated() != null)
-            userOpt.get().setIsActivated(userDto.getIsActivated());
+        userOpt.get().setPassword(encoder.encode(userDto.getPassword()));
 
         userRepository.save(userOpt.get());
 
-        //Sends an email to the user
-        try {
-            sparkPost.sendUserUpdatedMessage(userOpt.get());
-        } catch (Exception e){
-            System.out.println("Error :" + e.getMessage());
-        }
-
-        return ResponseEntity.ok(userOpt.get().getDto("Your account has been updated"));
+        return ResponseEntity.ok(userOpt.get());
     }
 
     /**
@@ -253,14 +201,6 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.delete(userOpt.get());
-
-        //Sends an email to the user
-        try {
-            sparkPost.sendUserRemovedMessage(userOpt.get());
-        } catch (Exception e){
-            System.out.println("Error :" + e.getMessage());
-        }
-
         return ResponseEntity.ok().body(new MessageResponse("User " + id + " deleted with success"));
     }
 }

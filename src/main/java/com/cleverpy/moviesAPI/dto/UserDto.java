@@ -1,4 +1,4 @@
-package com.cleverpy.moviesAPI.dto.user;
+package com.cleverpy.moviesAPI.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * DTO with the required data for the update of an user
+ * DTO with the required data for the creation of a new user
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserDto {
+public class UserDto {
 
     @NotBlank(message = "Email is mandatory")
     private String email;
@@ -20,8 +20,7 @@ public class UpdateUserDto {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
+    @NotBlank(message = "Password is mandatory")
     private String password;
-
-    private Boolean isActivated;
 
 }

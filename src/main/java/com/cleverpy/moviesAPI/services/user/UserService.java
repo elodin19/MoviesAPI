@@ -1,7 +1,6 @@
 package com.cleverpy.moviesAPI.services.user;
 
-import com.cleverpy.moviesAPI.dto.user.NewUserDto;
-import com.cleverpy.moviesAPI.dto.user.UpdateUserDto;
+import com.cleverpy.moviesAPI.dto.UserDto;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -9,9 +8,9 @@ import org.springframework.http.ResponseEntity;
  */
 public interface UserService {
 
-    ResponseEntity<?> createUser(NewUserDto newUser);
+    ResponseEntity<?> createUser(UserDto newUser);
     ResponseEntity<?> getById(Long id, String username);
     ResponseEntity<?> getAllUsers(Integer pageNumber);
-    ResponseEntity<?> updateUser(Long id, UpdateUserDto userDto, String username);
+    ResponseEntity<?> updateUser(Long id, UserDto userDto, String username);
     ResponseEntity<?> deleteUser(Long id, String username);
 }

@@ -17,6 +17,7 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
     boolean existsById(Long id);
     boolean existsByName(String name);
     Optional<Genre> findById(Long id);
+    Optional<Genre> findByName(String name);
     Page<Genre> findAll(Pageable page);
 
 }

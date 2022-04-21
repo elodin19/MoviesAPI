@@ -2,7 +2,6 @@ package com.cleverpy.moviesAPI.builders;
 
 import com.cleverpy.moviesAPI.entities.*;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,8 +37,8 @@ public class MovieBuilder {
         return this;
     }
 
-    public MovieBuilder setImdb_Id(String imdb_id){
-        movie.setImdb_id(imdb_id);
+    public MovieBuilder setImdbId(String imdbId){
+        movie.setImdbId(imdbId);
         return this;
     }
 
@@ -68,7 +67,7 @@ public class MovieBuilder {
         return this;
     }
 
-    public MovieBuilder setReleaseDate(Date releaseDate){
+    public MovieBuilder setReleaseDate(String releaseDate){
         movie.setReleaseDate(releaseDate);
         return this;
     }

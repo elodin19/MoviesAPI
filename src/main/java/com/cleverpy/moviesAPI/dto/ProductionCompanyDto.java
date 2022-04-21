@@ -1,4 +1,4 @@
-package com.cleverpy.moviesAPI.dto.productionCompany;
+package com.cleverpy.moviesAPI.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,9 +20,9 @@ public class ProductionCompanyDto {
     private String name;
 
     @NotBlank(message = "Logo Path is mandatory")
-    private String logoPath;
+    private String logo_path;
 
     @NotBlank(message = "Origin Country is mandatory")
-    private String originCountry;
+    private String origin_country;
 
 }
