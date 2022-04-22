@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class ProductionCountryDto {
 
-    private Long id;
-
     @NotBlank(message = "iso is mandatory")
     private String iso;
 

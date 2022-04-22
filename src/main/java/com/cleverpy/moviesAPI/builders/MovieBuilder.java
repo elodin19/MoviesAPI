@@ -17,6 +17,11 @@ public class MovieBuilder {
     }
 
     //Setters
+    public MovieBuilder setId(Long id){
+        movie.setId(id);
+        return this;
+    }
+
     public MovieBuilder setAdult(Boolean adult){
         movie.setAdult(adult);
         return this;

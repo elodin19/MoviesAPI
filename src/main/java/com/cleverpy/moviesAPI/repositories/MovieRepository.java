@@ -18,7 +18,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     boolean existsByImdbId(String ImdbId);
     boolean existsByOverview(String overview);
     boolean existsByPosterPath(String posterPath);
-    boolean existsByTitle(String title);
     Optional<Movie> findById(Long id);
     Page<Movie> findAll(Pageable page);
 

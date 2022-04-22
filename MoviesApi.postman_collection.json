@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"admin\",\n  \"username\": \"danieluser\"\n}",
+							"raw": "{\n  \"password\": \"admin\",\n  \"username\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -263,7 +263,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY0OTY3MDU0MH0.Q4p1PXStQ1RpOZhXRV9BC8ExsRVqmzyfYry1Z5PajaMv0cAhUfObc7pR3y6c-pZwIwBmdeBj4cldltX6593Qaw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY1MDYyOTY3MywiZXhwIjoxNjUwNjMzMjczfQ.eZS4jhEhsuKeBO8P79J9jgg89GOKyLIfwvN4LXSS9LmoNenlrBjmZK2XMx5VWHWeuEym65AIzkvJ5PPELD0pLQ",
 									"type": "string"
 								}
 							]
@@ -272,7 +272,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"Action\"}",
+							"raw": "{ \"name\": \"Horror\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1007,7 +1007,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY1MDUzODgzMSwiZXhwIjoxNjUwNTQyNDMxfQ.lxQ02cdVua_HtOljZR3owuuWegCff0Kv8yZsqARdppOfB10SD9D_Su1Z47m29Nq_1p8jTHSQM0mdbC_VdNrCnQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY1MDU2NTY0NCwiZXhwIjoxNjUwNTY5MjQ0fQ.7c81xFrLK6He46gOzONxCf2s23FE0cLeKc-rrOV8th9lg1r1WfKg0SRhhrgimKksWEW-9zBJvDQEcEqsQK6-AA",
 									"type": "string"
 								}
 							]
@@ -1016,7 +1016,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"adult\": false,\n    \"backdropPath\": \"blabla.com\",\n    \"budget\": 9898212,\n    \"homepage\": \"dasda.com\",\n    \"imdbId\": \"9821dsa3\",\n    \"originalLanguage\": \"Portuguese\",\n    \"originalTitle\": \"O Alto da Compadecida\",\n    \"popularity\": 9,\n    \"overview\": \"Cualquer frase 3\",\n    \"posterPath\": \"daisjdiajdoca3\",\n    \"releaseDate\": \"2002-04-02\",\n    \"revenue\": 999383323,\n    \"runtime\": 2,\n    \"status\": \"released\",\n    \"tagline\": \"Una frase que pegue\",\n    \"title\": \"O Alto da Compadecida\",\n    \"video\": true,\n    \"voteAverage\": 9.2,\n    \"voteCount\": 734,\n    \"genres\": [\n        {\n            \"id\": null,\n            \"name\": \"Comedy\"\n        },\n        {\n            \"id\": null,\n            \"name\": \"Horror\"\n        }\n    ],\n    \"productionCompanies\": [\n        {\n            \"id\": 56,\n            \"logoPath\": \"/cEaxANssasaEisCqeEoRvODv2dO1I0iI.png\",\n            \"name\": \"Hermes & Renato\",\n            \"originCountry\": \"BR\"\n        }\n    ],\n    \"productionCountries\": [\n        {\n            \"iso\": \"BR\",\n            \"name\": \"Brasil\"\n        }\n    ],\n    \"spokenLanguages\" : [\n        {\n            \"english_name\": \"Portuguese\",\n            \"iso\": \"pt-br\",\n            \"name\": \"Brazilian Portuguese\"\n        }\n    ]\n\n}",
+							"raw": "{\n    \"adult\": false,\n    \"backdropPath\": \"blabla.com\",\n    \"budget\": 9898212,\n    \"homepage\": \"dasda.com\",\n    \"imdbId\": \"9821dsa3\",\n    \"originalLanguage\": \"Portuguese\",\n    \"originalTitle\": \"O Alto da Compadecida\",\n    \"popularity\": 9,\n    \"overview\": \"Cualquer frase 3\",\n    \"posterPath\": \"daisjdiajdoca3\",\n    \"releaseDate\": \"2002-04-02\",\n    \"revenue\": 999383323,\n    \"runtime\": 2,\n    \"status\": \"released\",\n    \"tagline\": \"Una frase que pegue\",\n    \"title\": \"O Alto da Compadecida\",\n    \"video\": true,\n    \"voteAverage\": 9.2,\n    \"voteCount\": 734,\n    \"genres\": [\n        {\n            \"name\": \"Comedy\"\n        },\n        {\n            \"name\": \"Horror\"\n        }\n    ],\n    \"productionCompanies\": [\n        {\n            \"logoPath\": \"/cEaxANssasaEisCqeEoRvODv2dO1I0iI.png\",\n            \"name\": \"Hermes & Renato\",\n            \"originCountry\": \"BR\"\n        }\n    ],\n    \"productionCountries\": [\n        {\n            \"iso\": \"BR\",\n            \"name\": \"Brasil\"\n        }\n    ],\n    \"spokenLanguages\" : [\n        {\n            \"english_name\": \"Portuguese\",\n            \"iso\": \"pt-br\",\n            \"name\": \"Brazilian Portuguese\"\n        }\n    ]\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1072,7 +1072,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY1MDUzODgzMSwiZXhwIjoxNjUwNTQyNDMxfQ.lxQ02cdVua_HtOljZR3owuuWegCff0Kv8yZsqARdppOfB10SD9D_Su1Z47m29Nq_1p8jTHSQM0mdbC_VdNrCnQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiQURNSU4sVVNFUiIsImlhdCI6MTY1MDYyOTY3MywiZXhwIjoxNjUwNjMzMjczfQ.eZS4jhEhsuKeBO8P79J9jgg89GOKyLIfwvN4LXSS9LmoNenlrBjmZK2XMx5VWHWeuEym65AIzkvJ5PPELD0pLQ",
 									"type": "string"
 								}
 							]

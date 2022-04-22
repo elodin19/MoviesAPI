@@ -20,8 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MovieDto {
 
-    private Long id;
-
     @NotNull
     private Boolean adult;
 

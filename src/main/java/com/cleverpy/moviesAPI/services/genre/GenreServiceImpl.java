@@ -69,7 +69,7 @@ public class GenreServiceImpl implements GenreService {
         Pageable page = PageRequest.of(pageNumber, 10);
         Page<Genre> genres = genreRepository.findAll(page);
 
-        if (genres.toList().size() == 0)
+        if (genres == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(genres);

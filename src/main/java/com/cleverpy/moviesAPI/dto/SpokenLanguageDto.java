@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class SpokenLanguageDto {
 
-    public Long id;
-
     @NotBlank(message = "English Name is mandatory")
     private String english_name;
 

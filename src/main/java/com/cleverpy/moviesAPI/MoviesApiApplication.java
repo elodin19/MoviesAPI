@@ -114,7 +114,7 @@ public class MoviesApiApplication {
 						listLanguages.add(new SpokenLanguage(null, english_name, iso_639_1, name));
 					}
 
-					MovieDto movieDto = new MovieDto(null, adult, backdrop_path, budget, homepage, imdb_id, original_language,
+					MovieDto movieDto = new MovieDto(adult, backdrop_path, budget, homepage, imdb_id, original_language,
 							original_title, overview, popularity, poster_path, release_date, revenue, runtime, movieStatus,
 							tagline, title, video, vote_average, vote_count, listCompanies, listGenres, listCountries,
 							listLanguages);

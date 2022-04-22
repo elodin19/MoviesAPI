@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class GenreDto {
 
-    public Long id;
-
     @NotBlank(message = "Name is mandatory")
     public String name;
 }
