@@ -61,8 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
 
         List<String> allowedOrigins = new ArrayList<>();
-        allowedOrigins.add("http://localhost:3000/");
-        allowedOrigins.add("http://localhost:3002/");
+        //allowedOrigins.add("http://localhost:3000/");
+        allowedOrigins.add("*");
 
         List<String> allowedMethods = new ArrayList<>();
         allowedMethods.add("GET");
@@ -107,11 +107,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // Cross-Site Request Forgery CSRF
-        // CORS (Cross-origin resource sharing)
+        // CORS (Cross-origin Resource Sharing)
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .authorizeRequests().antMatchers("/api/auth/**", "/api/user/").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated();

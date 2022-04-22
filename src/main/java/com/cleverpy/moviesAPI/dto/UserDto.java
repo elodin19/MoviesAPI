@@ -1,4 +1,4 @@
-package com.cleverpy.moviesAPI.security.payload;
+package com.cleverpy.moviesAPI.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 /**
- * Dto used for the login requests
+ * DTO with the required data for the creation of a new user
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+@AllArgsConstructor
+public class UserDto {
+
+    @NotBlank(message = "Email is mandatory")
+    private String email;
 
     @NotBlank(message = "Username is mandatory")
     private String username;
