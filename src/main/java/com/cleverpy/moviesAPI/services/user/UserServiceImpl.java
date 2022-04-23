@@ -83,25 +83,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> getById(Long id, String username) {
 
-        Optional<User> userOpt = userRepository.findById(id);
+        Optional<User> userToGet = userRepository.findById(id);
         Optional<User> userConnecting = userRepository.findByUsername(username);
 
         //Tests if the user is the owner of the credentials or if it's admin
-        if (!userConnecting.get().getUsername().equalsIgnoreCase(username)){
+        if (!userConnecting.get().equals(userToGet.get())){
 
             boolean isAdmin = false;
 
-            for (Role role  : userOpt.get().getRoles()){
+            for (Role role  : userConnecting.get().getRoles()){
                 if (role.getName().equalsIgnoreCase("ADMIN")) isAdmin = true;
             }
 
             if (!isAdmin)
                 return ResponseEntity.badRequest()
-                        .body(new MessageResponse("The user " + username + " is not allowed to update the user "
-                                + id));
+                        .body(new MessageResponse("The user " + username + " is not allowed to get the user " + id));
         }
 
-        return ResponseEntity.ok(userOpt.get());
+        return ResponseEntity.ok(userToGet.get());
     }
 
     /**
@@ -122,7 +121,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to update User (only username, email, isActivated)
-     * Sends an alert email after the update
      * @param id
      * @param userDto
      * @return ResponseEntity (ok: User, bad request: messageResponse)
@@ -131,15 +129,15 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> updateUser(Long id, UserDto userDto, String username) {
 
         //Get Users
-        Optional<User> userOpt = userRepository.findById(id);
-        Optional<User> userConnecting = userRepository.findByUsername(username);
+        Optional<User> userToBeUpdated = userRepository.findById(id);
+        Optional<User> userAccessing = userRepository.findByUsername(username);
 
         //Tests if the user is the owner of the credentials or if it's admin
-        if (!userConnecting.get().getUsername().equalsIgnoreCase(username)){
+        if (!userAccessing.get().equals(userToBeUpdated.get())){
 
             boolean isAdmin = false;
 
-            for (Role role  : userOpt.get().getRoles()){
+            for (Role role  : userAccessing.get().getRoles()){
                 if (role.getName().equalsIgnoreCase("ADMIN")) isAdmin = true;
             }
 
@@ -150,31 +148,30 @@ public class UserServiceImpl implements UserService {
         }
 
         //Validates username
-        if (userOpt.get().getUsername() != userDto.getUsername() &&
+        if (userToBeUpdated.get().getUsername() != userDto.getUsername() &&
                 userRepository.existsByUsername(userDto.getUsername()))
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("This username is already being used" ));
 
         //Validates email
-        if (userOpt.get().getEmail() != userDto.getEmail() &&
+        if (userToBeUpdated.get().getEmail() != userDto.getEmail() &&
                 userRepository.existsByEmail(userDto.getEmail())){
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("This email is already being used" ));
         }
 
         //Starts updating
-        userOpt.get().setUsername(userDto.getUsername());
-        userOpt.get().setEmail(userDto.getEmail());
-        userOpt.get().setPassword(encoder.encode(userDto.getPassword()));
+        userToBeUpdated.get().setUsername(userDto.getUsername());
+        userToBeUpdated.get().setEmail(userDto.getEmail());
+        userToBeUpdated.get().setPassword(encoder.encode(userDto.getPassword()));
 
-        userRepository.save(userOpt.get());
+        userRepository.save(userToBeUpdated.get());
 
-        return ResponseEntity.ok(userOpt.get());
+        return ResponseEntity.ok(userToBeUpdated.get());
     }
 
     /**
      * Method to delete the user
-     * Sends a goodbye email
      * @param id
      * @return ResponseEntity (messageResponse)
      */
@@ -182,25 +179,25 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> deleteUser(Long id, String username) {
 
         //Gets the user
-        Optional<User> userOpt = userRepository.findById(id);
-        Optional<User> userConnecting = userRepository.findByUsername(username);
+        Optional<User> userToBeDeleted = userRepository.findById(id);
+        Optional<User> userAccessing = userRepository.findByUsername(username);
 
         //Only the own user or an admin can remove the user
-        if (!userOpt.get().getUsername().equalsIgnoreCase(username)){
+        if (!userAccessing.get().equals(userToBeDeleted.get())){
 
             boolean isAdmin = false;
 
-            for (Role role  : userConnecting.get().getRoles()){
+            for (Role role  : userAccessing.get().getRoles()){
                 if (role.getName().equalsIgnoreCase("ADMIN")) isAdmin = true;
             }
 
             if (!isAdmin)
                 return ResponseEntity.badRequest()
                         .body(new MessageResponse("The user " + username + " is not allowed to delete the user " +
-                                userOpt.get().getUsername()));
+                                userToBeDeleted.get().getUsername()));
         }
 
-        userRepository.delete(userOpt.get());
+        userRepository.delete(userToBeDeleted.get());
         return ResponseEntity.ok().body(new MessageResponse("User " + id + " deleted with success"));
     }
 }

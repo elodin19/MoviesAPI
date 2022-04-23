@@ -52,6 +52,30 @@ class ProductionCountryServiceImplTest {
     }
 
     @Test
+    void shouldNotCreateDuplicatedName() {
+        final ProductionCountryDto dto = new ProductionCountryDto("br", "Brasil");
+
+        when(repository.existsByName(dto.getName())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.create(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The production company " + dto.getName() + " is already registered");
+    }
+
+    @Test
+    void shouldNotCreateDuplicatedIso() {
+        final ProductionCountryDto dto = new ProductionCountryDto("br", "Brasil");
+
+        when(repository.existsByIso(dto.getIso())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.create(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The iso_3166_1 " + dto.getIso() + " is already registered");
+    }
+
+    @Test
     void getById() {
         final ProductionCountry country = new ProductionCountry(1L, "br", "Brasil");
 
@@ -87,6 +111,16 @@ class ProductionCountryServiceImplTest {
     }
 
     @Test
+    void getAllNull() {
+        final Pageable page = PageRequest.of(0, 10);
+
+        when(repository.findAll(page)).thenReturn(null);
+        ResponseEntity<?> expected = underTest.getAll(0);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(204);
+    }
+
+    @Test
     void update() {
         final ProductionCountry country = new ProductionCountry(1L, "br", "Brasil");
         final ProductionCountryDto dto = new ProductionCountryDto("sp", "Spain");
@@ -99,6 +133,34 @@ class ProductionCountryServiceImplTest {
         assertThat(expected.getBody()).asString().contains("id=1");
         assertThat(expected.getBody()).asString().contains("name=Spain");
         assertThat(expected.getBody()).asString().contains("iso=sp");
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedName() {
+        final ProductionCountryDto dto = new ProductionCountryDto("sp", "Spain");
+        final ProductionCountry country = new ProductionCountry(1L, "br", "Brasil");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(country));
+        when(repository.existsByName(dto.getName())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.update(1L, dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The name " + dto.getName() + " is already registered");
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedIso() {
+        final ProductionCountryDto dto = new ProductionCountryDto("sp", "Spain");
+        final ProductionCountry country = new ProductionCountry(1L, "br", "Brasil");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(country));
+        when(repository.existsByIso(dto.getIso())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.update(1L, dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The iso_3166_1 " + dto.getIso() + " is already registered");
     }
 
     @Test

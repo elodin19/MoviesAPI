@@ -102,7 +102,7 @@ public class ProductionCountryServiceImpl implements ProductionCountryService{
 
         if (countryRepository.existsByIso(countryDto.getIso()) && !countryOpt.get().getIso().equalsIgnoreCase(countryDto.getIso()))
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("The iso " + countryDto.getIso() + " is already registered"));
+                    .body(new MessageResponse("The iso_3166_1 " + countryDto.getIso() + " is already registered"));
 
         //Updates and saves the country
         countryOpt.get().setName(countryDto.getName());

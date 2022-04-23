@@ -48,8 +48,6 @@ class UserServiceImplTest {
         roleRepository = mock(RoleRepository.class);
         encoder = mock(PasswordEncoder.class);
         underTest = new UserServiceImpl(repository, roleRepository, encoder);
-
-
     }
 
     @Test
@@ -67,9 +65,34 @@ class UserServiceImplTest {
     }
 
     @Test
+    void shouldNotCreateDuplicatedUsername() {
+        final UserDto dto = new UserDto("test@gmail.com", "test", "1234");
+        final User user = new User(1L, "test@gmail.com", "test", encoder.encode("1234"), null);
+
+        when(repository.findByUsername(dto.getUsername())).thenReturn(Optional.of(user));
+        final ResponseEntity<?> expected = underTest.createUser(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The username " + dto.getUsername() + " is already being used");
+    }
+
+    @Test
+    void shouldNotCreateDuplicatedEmail() {
+        final UserDto dto = new UserDto("test@gmail.com", "test", "1234");
+        final User user = new User(1L, "test@gmail.com", "test", encoder.encode("1234"), null);
+
+        when(repository.findByEmail(dto.getEmail())).thenReturn(Optional.of(user));
+        final ResponseEntity<?> expected = underTest.createUser(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The email " + dto.getEmail() + " is already being used");
+    }
+
+    @Test
     void getById() {
-        final User user = new User(3L, "test@gmail.com", "test",
-                encoder.encode("1234"), null);
+        final User user = new User(3L, "test@gmail.com", "test", encoder.encode("1234"), null);
 
         when(repository.findById(3L)).thenReturn(Optional.of(user));
         when(repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -80,6 +103,24 @@ class UserServiceImplTest {
         assertThat(expected.getBody()).asString().contains("id=3");
         assertThat(expected.getBody()).asString().contains("email=test@gmail.com");
         assertThat(expected.getBody()).asString().contains("username=test");
+    }
+
+    @Test
+    void shouldNotGetById(){
+        final Role role = new Role(1L, "USER");
+        List<Role> roles = new ArrayList<Role>(){};
+        roles.add(role);
+
+        final User userAccessing = new User(1L, "another@user.com", "client", encoder.encode("1234"), roles);
+        final User userToGet = new User(2L, "onemore@user.com", "client2", encoder.encode("1234"), roles);
+
+        when(repository.findById(userToGet.getId())).thenReturn(Optional.of(userToGet));
+        when(repository.findByUsername(userAccessing.getUsername())).thenReturn(Optional.of(userAccessing));
+        final ResponseEntity<?> expected = underTest.getById(userToGet.getId(), userAccessing.getUsername());
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The user " + userAccessing.getUsername() + " is not allowed to get the user " + userToGet.getId());
     }
 
     @Test
@@ -104,6 +145,16 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getAllNull() {
+        final Pageable page = PageRequest.of(0, 10);
+
+        when(repository.findAll(page)).thenReturn(null);
+        ResponseEntity<?> expected = underTest.getAllUsers(0);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(204);
+    }
+
+    @Test
     void updateUser() {
         final User user = new User(3L, "test@gmail.com", "test",
                 encoder.encode("1234"), null);
@@ -121,9 +172,57 @@ class UserServiceImplTest {
     }
 
     @Test
-    void deleteUser() {
-        final User user = new User(3L, "test@gmail.com", "test",
-                encoder.encode("1234"), null);
+    void shouldNotUpdateNotOwnerNorAdmin(){
+        final Role role = new Role(1L, "USER");
+        List<Role> roles = new ArrayList<Role>(){};
+        roles.add(role);
+
+        final UserDto dto = new UserDto("test@gmail.com", "test", "1234");
+        final User userAccessing = new User(1L, "another@user.com", "client", encoder.encode("1234"), roles);
+        final User userToBeUpdated = new User(2L, "onemore@user.com", "client2", encoder.encode("1234"), null);
+
+        when(repository.findById(userToBeUpdated.getId())).thenReturn(Optional.of(userToBeUpdated));
+        when(repository.findByUsername(userAccessing.getUsername())).thenReturn(Optional.of(userAccessing));
+        final ResponseEntity<?> expected = underTest.updateUser(userToBeUpdated.getId(), dto, userAccessing.getUsername());
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The user " + userAccessing.getUsername() + " is not allowed to update the user " + dto.getUsername());
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedUsername() {
+        final UserDto dto = new UserDto("test@gmail.com", "test", "1234");
+        final User userAccessing = new User(1L, "manager@gmail.com", "manager", encoder.encode("1234"), null);
+
+        when(repository.existsByUsername(dto.getUsername())).thenReturn(true);
+        when(repository.findById(userAccessing.getId())).thenReturn(Optional.of(userAccessing));
+        when(repository.findByUsername(userAccessing.getUsername())).thenReturn(Optional.of(userAccessing));
+        final ResponseEntity<?> expected = underTest.updateUser(userAccessing.getId(), dto, userAccessing.getUsername());
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("This username is already being used");
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedEmail(){
+        final UserDto dto = new UserDto("test@gmail.com", "test", "1234");
+        final User userAccessing = new User(1L, "manager@gmail.com", "manager", encoder.encode("1234"), null);
+
+        when(repository.existsByEmail(dto.getEmail())).thenReturn(true);
+        when(repository.findById(userAccessing.getId())).thenReturn(Optional.of(userAccessing));
+        when(repository.findByUsername(userAccessing.getUsername())).thenReturn(Optional.of(userAccessing));
+        final ResponseEntity<?> expected = underTest.updateUser(userAccessing.getId(), dto, userAccessing.getUsername());
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("This email is already being used");
+    }
+
+    @Test
+    void delete() {
+        final User user = new User(3L, "test@gmail.com", "test", encoder.encode("1234"), null);
 
         when(repository.findById(3L)).thenReturn(Optional.of(user));
         when(repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -132,5 +231,23 @@ class UserServiceImplTest {
         assertThat(expected.getStatusCodeValue()).isEqualTo(200);
         assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
         assertThat(expected.getBody()).asString().contains("User " + user.getId() + " deleted with success");
+    }
+
+    @Test
+    void shouldNotDelete(){
+        final Role role = new Role(1L, "USER");
+        List<Role> roles = new ArrayList<Role>(){};
+        roles.add(role);
+
+        final User userConnecting = new User(3L, "test@gmail.com", "test", encoder.encode("1234"), roles);
+        final User userToBeRemoved = new User(4L, "tobe@removed.com", "remove", encoder.encode("1234"), null);
+
+        when(repository.findById(userToBeRemoved.getId())).thenReturn(Optional.of(userToBeRemoved));
+        when(repository.findByUsername(userConnecting.getUsername())).thenReturn(Optional.of(userConnecting));
+        final ResponseEntity<?> expected = underTest.deleteUser(userToBeRemoved.getId(), userConnecting.getUsername());
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The user " + userConnecting.getUsername() + " is not allowed to delete the user " + userToBeRemoved.getUsername());
     }
 }

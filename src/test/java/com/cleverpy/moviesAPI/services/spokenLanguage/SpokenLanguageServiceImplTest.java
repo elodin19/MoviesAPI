@@ -53,6 +53,30 @@ class SpokenLanguageServiceImplTest {
     }
 
     @Test
+    void shouldNotCreateDuplicatedName() {
+        final SpokenLanguageDto dto = new SpokenLanguageDto("Spanish", "es", "Spanish");
+
+        when(repository.existsByName(dto.getName())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.create(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The spoken language " + dto.getName() + " is already registered");
+    }
+
+    @Test
+    void shouldNotCreateDuplicatedIso() {
+        final SpokenLanguageDto dto = new SpokenLanguageDto("Spanish", "es", "Spanish");
+
+        when(repository.existsByIso(dto.getIso())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.create(dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The iso " + dto.getIso() + " is already registered");
+    }
+
+    @Test
     void getById() {
         final SpokenLanguage language = new SpokenLanguage(1L, "Spanish", "es", "Spanish");
 
@@ -89,6 +113,16 @@ class SpokenLanguageServiceImplTest {
     }
 
     @Test
+    void getAllNull() {
+        final Pageable page = PageRequest.of(0, 10);
+
+        when(repository.findAll(page)).thenReturn(null);
+        ResponseEntity<?> expected = underTest.getAll(0);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(204);
+    }
+
+    @Test
     void update() {
         final SpokenLanguage language = new SpokenLanguage(1L, "Spanish", "es", "Spanish");
         final SpokenLanguageDto dto = new SpokenLanguageDto("English", "en", "English");
@@ -102,6 +136,34 @@ class SpokenLanguageServiceImplTest {
         assertThat(expected.getBody()).asString().contains("english_name=English");
         assertThat(expected.getBody()).asString().contains("iso=en");
         assertThat(expected.getBody()).asString().contains("name=English");
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedName() {
+        final SpokenLanguage language = new SpokenLanguage(1L, "Spanish", "es", "Spanish");
+        final SpokenLanguageDto dto = new SpokenLanguageDto("English", "en", "English");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(language));
+        when(repository.existsByName(dto.getName())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.update(1L, dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The spoken language " + dto.getName() + " is already registered");
+    }
+
+    @Test
+    void shouldNotUpdateDuplicatedIso() {
+        final SpokenLanguage language = new SpokenLanguage(1L, "Spanish", "es", "Spanish");
+        final SpokenLanguageDto dto = new SpokenLanguageDto("English", "en", "English");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(language));
+        when(repository.existsByIso(dto.getIso())).thenReturn(true);
+        final ResponseEntity<?> expected = underTest.update(1L, dto);
+
+        assertThat(expected.getStatusCodeValue()).isEqualTo(400);
+        assertThat(expected.getBody()).isInstanceOf(MessageResponse.class);
+        assertThat(expected.getBody()).asString().contains("The iso " + dto.getIso() + " is already registered");
     }
 
     @Test
