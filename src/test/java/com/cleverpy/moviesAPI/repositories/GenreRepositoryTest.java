@@ -22,75 +22,75 @@ class GenreRepositoryTest {
 
     @BeforeEach
     void setUp(){
-        Genre genre = new Genre(1L, "Horror");
+        final Genre genre = new Genre(1L, "Horror");
         underTest.save(genre);
     }
 
     @AfterEach
     void tearDown(){
-        Genre genre = underTest.getById(1L);
+        final Genre genre = underTest.getById(1L);
         underTest.delete(genre);
     }
 
     @Test
     void existsById() {
-        boolean expected = underTest.existsById(1L);
+        final boolean expected = underTest.existsById(1L);
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistById() {
-        boolean expected = underTest.existsById(2L);
+        final boolean expected = underTest.existsById(2L);
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByName() {
-        boolean expected = underTest.existsByName("Horror");
+        final boolean expected = underTest.existsByName("Horror");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByName() {
-        boolean expected = underTest.existsByName("Comedy");
+        final boolean expected = underTest.existsByName("Comedy");
         assertThat(expected).isFalse();
     }
 
     @Test
     void findById() {
-        Optional<Genre> expected = underTest.findById(1L);
+        final Optional<Genre> expected = underTest.findById(1L);
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindById() {
-        Optional<Genre> expected = underTest.findById(2L);
+        final Optional<Genre> expected = underTest.findById(2L);
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findByName() {
-        Optional<Genre> expected = underTest.findByName("Horror");
+        final Optional<Genre> expected = underTest.findByName("Horror");
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindByName() {
-        Optional<Genre> expected = underTest.findByName("Comedy");
+        final Optional<Genre> expected = underTest.findByName("Comedy");
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findAll() {
-        Pageable page = PageRequest.of(0, 10);
-        Page<Genre> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(0, 10);
+        final Page<Genre> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isTrue();
     }
 
     @Test
     void doesNotFindAll() {
-        Pageable page = PageRequest.of(2, 10);
-        Page<Genre> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(2, 10);
+        final Page<Genre> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isFalse();
     }
 }

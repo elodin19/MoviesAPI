@@ -77,7 +77,7 @@ public class SpokenLanguageServiceImpl implements SpokenLanguageService {
         Pageable page = PageRequest.of(pageNumber, 10);
         Page<SpokenLanguage> languages = languageRepository.findAll(page);
 
-        if (languages.toList().size() == 0)
+        if (languages == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(languages);

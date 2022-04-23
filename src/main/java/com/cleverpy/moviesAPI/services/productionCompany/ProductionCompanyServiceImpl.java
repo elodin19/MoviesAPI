@@ -77,7 +77,7 @@ public class ProductionCompanyServiceImpl implements ProductionCompanyService {
         Pageable page = PageRequest.of(pageNumber, 10);
         Page<ProductionCompany> companies = companyRepository.findAll(page);
 
-        if (companies.toList().size() == 0)
+        if (companies == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(companies);

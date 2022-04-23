@@ -76,7 +76,7 @@ public class ProductionCountryServiceImpl implements ProductionCountryService{
         Pageable page = PageRequest.of(pageNumber, 10);
         Page<ProductionCountry> countries = countryRepository.findAll(page);
 
-        if (countries.toList().size() == 0)
+        if (countries == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(countries);

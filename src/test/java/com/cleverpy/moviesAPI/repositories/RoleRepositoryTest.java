@@ -19,25 +19,25 @@ class RoleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Role role = new Role(1L, "MANAGER");
+        final Role role = new Role(1L, "MANAGER");
         underTest.save(role);
     }
 
     @AfterEach
     void tearDown() {
-        Role role = underTest.getById(1L);
+        final Role role = underTest.getById(1L);
         underTest.delete(role);
     }
 
     @Test
     void findByName() {
-        Optional<Role> expected = underTest.findByName("MANAGER");
+        final Optional<Role> expected = underTest.findByName("MANAGER");
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindByName() {
-        Optional<Role> expected = underTest.findByName("CLIENT");
+        final Optional<Role> expected = underTest.findByName("CLIENT");
         assertThat(expected).isEmpty();
     }
 }

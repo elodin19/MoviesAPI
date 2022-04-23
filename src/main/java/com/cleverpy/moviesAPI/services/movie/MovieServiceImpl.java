@@ -181,7 +181,7 @@ public class MovieServiceImpl implements MovieService {
         Example<Movie> query = Example.of(movieWithFilters, example);
         Page<Movie> movies = movieRepository.findAll(query, page);
 
-        if (movies.toList().size() == 0)
+        if (movies == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(movies);

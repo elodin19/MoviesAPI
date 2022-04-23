@@ -23,7 +23,7 @@ class MovieRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Movie movie = new MovieBuilder()
+        final Movie movie = new MovieBuilder()
                 .setId(1L)
                 .setAdult(false)
                 .setBudget(1000L)
@@ -45,81 +45,81 @@ class MovieRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        Movie movie = underTest.getById(1L);
+        final Movie movie = underTest.getById(1L);
         underTest.delete(movie);
     }
 
     @Test
     void existsById() {
-        boolean expected = underTest.existsById(1L);
+        final boolean expected = underTest.existsById(1L);
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistById() {
-        boolean expected = underTest.existsById(2L);
+        final boolean expected = underTest.existsById(2L);
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByImdbId() {
-        boolean expected = underTest.existsByImdbId("imdb");
+        final boolean expected = underTest.existsByImdbId("imdb");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByImdbId() {
-        boolean expected = underTest.existsByImdbId("imdb202");
+        final boolean expected = underTest.existsByImdbId("imdb202");
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByOverview() {
-        boolean expected = underTest.existsByOverview("overview");
+        final boolean expected = underTest.existsByOverview("overview");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByOverview() {
-        boolean expected = underTest.existsByOverview("Some crazy people");
+        final boolean expected = underTest.existsByOverview("Some crazy people");
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByPosterPath() {
-        boolean expected = underTest.existsByPosterPath("poster.jpg");
+        final boolean expected = underTest.existsByPosterPath("poster.jpg");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByPosterPath() {
-        boolean expected = underTest.existsByPosterPath("poster.png");
+        final boolean expected = underTest.existsByPosterPath("poster.png");
         assertThat(expected).isFalse();
     }
 
     @Test
     void findById() {
-        Optional<Movie> expected = underTest.findById(1L);
+        final Optional<Movie> expected = underTest.findById(1L);
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindById() {
-        Optional<Movie> expected = underTest.findById(40L);
+        final Optional<Movie> expected = underTest.findById(40L);
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findAll() {
-        Pageable page = PageRequest.of(0, 10);
-        Page<Movie> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(0, 10);
+        final Page<Movie> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isTrue();
     }
 
     @Test
     void doesNotFindAll() {
-        Pageable page = PageRequest.of(5, 10);
-        Page<Movie> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(5, 10);
+        final Page<Movie> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isFalse();
     }
 }

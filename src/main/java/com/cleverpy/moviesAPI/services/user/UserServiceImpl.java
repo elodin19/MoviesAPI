@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         Pageable page = PageRequest.of(pageNumber, 10);
         Page<User> users = userRepository.findAll(page);
 
-        if (users.toList().size() == 0)
+        if (users == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(users);

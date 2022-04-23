@@ -22,75 +22,75 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        User user = new User(3L, "test@gmail.com", "testing", "1234", null);
+        final User user = new User(3L, "test@gmail.com", "testing", "1234", null);
         underTest.save(user);
     }
 
     @AfterEach
     void tearDown() {
-        User user = underTest.getById(1L);
+        final User user = underTest.getById(1L);
         underTest.delete(user);
     }
 
     @Test
     void findByUsername() {
-        Optional<User> expected = underTest.findByUsername("testing");
+        final Optional<User> expected = underTest.findByUsername("testing");
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindByUsername() {
-        Optional<User> expected = underTest.findByUsername("anyone");
+        final Optional<User> expected = underTest.findByUsername("anyone");
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findByEmail() {
-        Optional<User> expected = underTest.findByEmail("test@gmail.com");
+        final Optional<User> expected = underTest.findByEmail("test@gmail.com");
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindByEmail() {
-        Optional<User> expected = underTest.findByEmail("test@hotmail.com");
+        final Optional<User> expected = underTest.findByEmail("test@hotmail.com");
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findAll() {
-        Pageable page = PageRequest.of(0, 10);
-        Page<User> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(0, 10);
+        final Page<User> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isTrue();
     }
 
     @Test
     void doesNotFindAll() {
-        Pageable page = PageRequest.of(1, 10);
-        Page<User> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(1, 10);
+        final Page<User> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isFalse();
     }
 
     @Test
     void existsByUsername() {
-        boolean expected = underTest.existsByUsername("testing");
+        final boolean expected = underTest.existsByUsername("testing");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByUsername() {
-        boolean expected = underTest.existsByUsername("anyone");
+        final boolean expected = underTest.existsByUsername("anyone");
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByEmail() {
-        boolean expected = underTest.existsByEmail("test@gmail.com");
+        final boolean expected = underTest.existsByEmail("test@gmail.com");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByEmail() {
-        boolean expected = underTest.existsByEmail("test@hotmail.com");
+        final boolean expected = underTest.existsByEmail("test@hotmail.com");
         assertThat(expected).isFalse();
     }
 }

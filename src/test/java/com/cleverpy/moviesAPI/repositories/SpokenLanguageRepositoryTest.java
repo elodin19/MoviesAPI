@@ -22,87 +22,87 @@ class SpokenLanguageRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        SpokenLanguage language = new SpokenLanguage(1L, "Portuguese", "pt-br", "Brasil");
+        final SpokenLanguage language = new SpokenLanguage(1L, "Portuguese", "pt-br", "Brasil");
         underTest.save(language);
     }
 
     @AfterEach
     void tearDown() {
-        SpokenLanguage language = underTest.getById(1L);
+        final SpokenLanguage language = underTest.getById(1L);
         underTest.delete(language);
     }
 
     @Test
     void existsById() {
-        boolean expected = underTest.existsById(1L);
+        final boolean expected = underTest.existsById(1L);
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistById() {
-        boolean expected = underTest.existsById(2L);
+        final boolean expected = underTest.existsById(2L);
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByName() {
-        boolean expected = underTest.existsByName("Brasil");
+        final boolean expected = underTest.existsByName("Brasil");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByName() {
-        boolean expected = underTest.existsByName("Klingon");
+        final boolean expected = underTest.existsByName("Klingon");
         assertThat(expected).isFalse();
     }
 
     @Test
     void existsByIso() {
-        boolean expected = underTest.existsByIso("pt-br");
+        final boolean expected = underTest.existsByIso("pt-br");
         assertThat(expected).isTrue();
     }
 
     @Test
     void doesNotExistByIso() {
-        boolean expected = underTest.existsByIso("kl");
+        final boolean expected = underTest.existsByIso("kl");
         assertThat(expected).isFalse();
     }
 
     @Test
     void findById() {
-        Optional<SpokenLanguage> expected = underTest.findById(1L);
+        final Optional<SpokenLanguage> expected = underTest.findById(1L);
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindById() {
-        Optional<SpokenLanguage> expected = underTest.findById(2L);
+        final Optional<SpokenLanguage> expected = underTest.findById(2L);
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findByName() {
-        Optional<SpokenLanguage> expected = underTest.findByName("Brasil");
+        final Optional<SpokenLanguage> expected = underTest.findByName("Brasil");
         assertThat(expected).isPresent();
     }
 
     @Test
     void doesNotFindByName() {
-        Optional<SpokenLanguage> expected = underTest.findByName("Klingon");
+        final Optional<SpokenLanguage> expected = underTest.findByName("Klingon");
         assertThat(expected).isEmpty();
     }
 
     @Test
     void findAll() {
-        Pageable page = PageRequest.of(0, 10);
-        Page<SpokenLanguage> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(0, 10);
+        final Page<SpokenLanguage> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isTrue();
     }
 
     @Test
     void doesNotFindAll() {
-        Pageable page = PageRequest.of(2, 10);
-        Page<SpokenLanguage> expected = underTest.findAll(page);
+        final Pageable page = PageRequest.of(2, 10);
+        final Page<SpokenLanguage> expected = underTest.findAll(page);
         assertThat(expected.toList().size() > 0).isFalse();
     }
 }
