@@ -9,4 +9,4 @@ This project uses:
 - JSON in Java and HttpURLConnection to consume data from the MovieDB API;
 - Lombok for faster development and a cleaner code;
 - Hibernate, JPA and PostgreSQL for data storage;
-- And more...
+- H2, JUnit and Mockito for testing.
