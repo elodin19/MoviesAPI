@@ -60,7 +60,7 @@ public class MovieServiceImpl implements MovieService {
                 && movieRepository.existsByOverview(movieDto.getOverview())
                 && movieRepository.existsByPosterPath(movieDto.getPosterPath())
         )
-            return ResponseEntity.badRequest().body("Duplicated values. Fields ImdbId, Overview, PosterPath and Title must be unique");
+            return ResponseEntity.badRequest().body(new MessageResponse("Duplicated values. Fields ImdbId, Overview, PosterPath and Title must be unique"));
 
         //Validates genres, companies, countries and languages
         List<Genre> genres = new ArrayList<>();
@@ -177,9 +177,9 @@ public class MovieServiceImpl implements MovieService {
                 .build();
 
         //Creates query
-        ExampleMatcher example = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Movie> query = Example.of(movieWithFilters, example);
-        Page<Movie> movies = movieRepository.findAll(query, page);
+        final ExampleMatcher example = ExampleMatcher.matching().withIgnoreNullValues();
+        final Example<Movie> query = Example.of(movieWithFilters, example);
+        final Page<Movie> movies = movieRepository.findAll(query, page);
 
         if (movies == null)
             return ResponseEntity.noContent().build();
@@ -201,11 +201,11 @@ public class MovieServiceImpl implements MovieService {
         Optional<Movie> movieOpt = movieRepository.findById(id);
 
         //Tests if a value that's supposed to be unique is being duplicated
-        if (movieRepository.existsByImdbId(movieDto.getImdbId()) && !movieOpt.get().getImdbId().equalsIgnoreCase(movieDto.getImdbId())
-            && movieRepository.existsByOverview(movieDto.getOverview()) && !movieOpt.get().getOverview().equalsIgnoreCase(movieDto.getOverview())
-            && movieRepository.existsByPosterPath(movieDto.getPosterPath()) && !movieOpt.get().getPosterPath().equalsIgnoreCase(movieDto.getPosterPath())
+        if ((movieRepository.existsByImdbId(movieDto.getImdbId()) && !movieOpt.get().getImdbId().equalsIgnoreCase(movieDto.getImdbId()))
+            || (movieRepository.existsByOverview(movieDto.getOverview()) && !movieOpt.get().getOverview().equalsIgnoreCase(movieDto.getOverview()))
+            || (movieRepository.existsByPosterPath(movieDto.getPosterPath()) && !movieOpt.get().getPosterPath().equalsIgnoreCase(movieDto.getPosterPath()))
         )
-            return ResponseEntity.badRequest().body("Duplicated values. Fields ImdbId, Overview and PosterPath must be unique");
+            return ResponseEntity.badRequest().body(new MessageResponse("Duplicated values. Fields ImdbId, Overview and PosterPath must be unique"));
 
         //Validates genres, companies, countries and languages
         List<Genre> genres = new ArrayList<>();
