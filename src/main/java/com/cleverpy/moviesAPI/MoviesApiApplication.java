@@ -29,7 +29,7 @@ public class MoviesApiApplication {
 		ApplicationContext context = SpringApplication.run(MoviesApiApplication.class, args);
 		MovieServiceImpl service = context.getBean(MovieServiceImpl.class);
 
-		//final String KEY = System.getenv("MovieDBKey");
+		final String KEY = System.getenv("MovieDBKey");
 
 		//Get movies from theMovieDB
 		HttpURLConnection connection = null;
@@ -40,7 +40,7 @@ public class MoviesApiApplication {
 		for (int i = 860; i <= 910; i++){
 			try{
 				URL url = new URL("https://api.themoviedb.org/3/movie/" + i + 
-						"?api_key=e6d45c582286976ca1c9efa972650ff2&language=en-US");
+						"?api_key=" + KEY + "&language=en-US");
 				connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("GET");
 				connection.setConnectTimeout(5000);
