@@ -21,7 +21,6 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is mandatory")
     @Column(nullable = false, unique = true)
     private String name;
 }
