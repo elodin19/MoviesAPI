@@ -53,7 +53,7 @@ public class AuthController {
 
         } catch (NoSuchElementException e){
 
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Error from No Such Element Exception. Message: " + e.getMessage());
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("The user " + loginRequest.getUsername() + " doesn't exist"));
         }
