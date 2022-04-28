@@ -8,5 +8,5 @@ This project uses:
 - Swagger for documentation;
 - JSON in Java and HttpURLConnection to consume data from the MovieDB API;
 - Lombok for faster development and a cleaner code;
-- Hibernate, JPA and PostgreSQL for data storage;
+- JPA and PostgreSQL for data storage;
 - H2, JUnit and Mockito for testing.

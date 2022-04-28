@@ -6,6 +6,7 @@ import com.cleverpy.moviesAPI.security.jwt.JwtAuthEntryPoint;
 import com.cleverpy.moviesAPI.security.jwt.JwtTokenUtil;
 import com.cleverpy.moviesAPI.security.payload.LoginRequest;
 import com.cleverpy.moviesAPI.security.service.UserDetailsServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -63,23 +64,28 @@ class AuthControllerTest {
 
         MockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"admin\", \"password\": \"admin\"}"))
+                        .content(asJsonString(dto)))
                         .andExpect(status().isOk());
-
-
 
     }
 
     @Test
     void shouldNotLoginBadCredential() throws Exception {
         LoginRequest dto = new LoginRequest("user", "user");
-        User user = new User(1L, "admin@gmail.com", "admin", encoder.encode("1234"), null);
 
         when(repository.findByUsername(dto.getUsername())).thenThrow(NoSuchElementException.class);
 
         MockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"user\", \"password\": \"user\"}"))
+                        .content(asJsonString(dto)))
                         .andExpect(status().isBadRequest());
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
